@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Web3People Design System - Global Tokens
+   ============================================================ */
+
+@theme {
+  --color-void: #0A0A0A;
+  --color-void-secondary: #111111;
+  --color-void-border: #1E1E1E;
+  --color-neon: #00FF9D;
+  --color-neon-dim: rgba(0, 255, 157, 0.15);
+  --color-neon-glow: rgba(0, 255, 157, 0.4);
+  --color-text-primary: #F5F5F5;
+  --color-text-secondary: #888888;
+  --color-text-muted: #555555;
+  --color-surface: #161616;
+  --color-surface-hover: #1C1C1C;
+
+  --font-sans: var(--font-outfit), 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'Roboto Mono', monospace;
+
+  --radius: 0px;
+
+  --background: 0 0% 4%;
+  --foreground: 0 0% 96%;
+  --card: 0 0% 8%;
+  --card-foreground: 0 0% 96%;
+  --popover: 0 0% 6%;
+  --popover-foreground: 0 0% 96%;
+  --primary: 157 100% 50%;
+  --primary-foreground: 0 0% 4%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 88%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 53%;
+  --accent: 157 100% 50%;
+  --accent-foreground: 0 0% 4%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 96%;
+  --border: 0 0% 12%;
+  --input: 0 0% 12%;
+  --ring: 157 100% 50%;
+}
+
+/* ============================================================
+   Base Reset — @layer base 안에 넣어야 Tailwind 유틸리티가 정상 작동
+   ============================================================ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-void);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+  }
+
+  p {
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+}
+
+/* ============================================================
+   Utilities (Tailwind이 생성 못하는 커스텀 유틸리티만)
+   ============================================================ */
+
+@layer utilities {
+  .neon-text { color: var(--color-neon); }
+  .neon-border { border-color: var(--color-neon); }
+  .neon-glow { box-shadow: 0 0 20px var(--color-neon-glow), 0 0 40px var(--color-neon-dim); }
+}
+
+/* ============================================================
+   Scrollbar (브라우저 API - 레이어 밖에 있어도 무방)
+   ============================================================ */
+
+::selection {
+  background-color: var(--color-neon-dim);
+  color: var(--color-neon);
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-void); }
+::-webkit-scrollbar-thumb { background: var(--color-void-border); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-neon); }
