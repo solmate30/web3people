@@ -1,0 +1,131 @@
+# Backlog — web3people
+> Created: 2026-03-29 00:00
+> Last Updated: 2026-03-29 18:55
+
+## 칸반 보드
+
+### In Progress (진행 중)
+
+_없음_
+
+---
+
+### Todo — Phase 1: 기반 세팅 (목표: 2026-04-01)
+
+- [x] **[P1-01]** Next.js 16 + Payload CMS v3 프로젝트 초기화
+  - `create-payload-app` blank 템플릿, `@payloadcms/db-sqlite` 어댑터
+  - App Router (`src/app/(frontend)`, `src/app/(payload)`) 구조 확인
+- [x] **[P1-01a]** Turso (SQLite) 데이터베이스 생성 및 연결
+  - `turso db create web3people` 실행 완료
+  - `DATABASE_URL`, `DATABASE_AUTH_TOKEN` 환경변수 설정 완료
+  - `payload.config.ts`에 `authToken` 추가로 Turso 원격 연결 확인
+- [x] **[P1-01b]** Payload Admin 패널 정상 기동 확인 (`/admin/create-first-user` 접근 성공)
+- [x] **[P1-01c]** Better-Auth 설치 및 초기화
+  - `src/lib/auth.ts` (서버 인스턴스, Turso 연결)
+  - `src/lib/auth-client.ts` (클라이언트 헬퍼, signIn/signOut/useSession)
+  - `src/app/api/auth/[...all]/route.ts` (Route Handler)
+- [x] **[P1-01d]** Tailwind CSS v4 + shadcn/ui 셋업
+  - `tailwindcss`, `@tailwindcss/postcss`, `postcss` 설치
+  - `components.json` 수동 설정 (Tailwind v4 CSS 파일 경로 지정)
+  - `clsx`, `tailwind-merge`, `lucide-react` 설치
+  - `src/lib/utils.ts` — `cn()` 유틸리티 생성
+- [x] **[P1-01e]** 디자인 토큰 적용 (`src/app/(frontend)/styles.css`)
+  - Tailwind v4 `@theme` 블록으로 커스텀 색상/폰트/radius 정의
+  - Void 다크 모드 (`#0A0A0A`), 네온 그린 (`#00FF9D`), 0px border-radius
+  - shadcn/ui 호환 CSS 변수 매핑 완료
+  - 네온 글로우, 마이크로 애니메이션 클래스 정의
+- [x] **[P1-03]** Payload 컬렉션 정의
+  - `People.ts`, `Interviews.ts`, `Tags.ts`, `Comments.ts`, `Users.ts`, `Media.ts` 작성 완료
+  - Q&A 블록 구조 (qa / text / image), 발행 상태 access control, publishedAt 자동 설정 hook 포함
+- [ ] **[P1-04]** 어드민/편집자 계정 생성
+  - 시드 스크립트 준비 완료: `pnpm seed`
+  - `/admin/create-first-user`에서 첫 admin 생성 후 `pnpm seed` 실행 또는 어드민 패널에서 직접 추가
+- [x] **[P1-05]** Vercel 프로젝트 연결 설정
+  - `vercel.json` 생성 완료 (pnpm build, outputDirectory .next)
+  - Vercel 대시보드에서 환경변수 설정 필요 (DATABASE_URL, DATABASE_AUTH_TOKEN, PAYLOAD_SECRET, BLOB_READ_WRITE_TOKEN)
+- [x] **[P1-06]** 이미지 스토리지 설정 (Cloudinary)
+  - `cloudinary` SDK 설치, `src/plugins/cloudinaryStorage.ts` 커스텀 플러그인 작성
+  - `beforeChange` 훅으로 업로드 → Cloudinary URL을 `media.url`에 저장
+  - `afterDelete` 훅으로 Cloudinary 파일 자동 삭제
+  - 환경변수 3개 미설정 시 로컬 스토리지 폴백 (개발 환경)
+  - `.env`에 CLOUDINARY_* 키 등록 완료
+
+---
+
+### Todo — Phase 2: 프론트엔드 개발 (목표: 2026-04-08)
+
+- [x] **[P2-01]** Google Fonts 로드 (Outfit / JetBrains Mono) — layout.tsx 완료
+- [x] **[P2-02]** 공통 컴포넌트 작성
+  - `Header` (sticky, backdrop-blur, 로고 + nav)
+  - `Footer`
+  - `InterviewCard` (3:4 이미지, 태그, 제목, 인물, 날짜)
+  - `PersonCard` (프로필 사진, 이름, 직함)
+  - `LexicalContent` (Lexical AST 렌더러)
+- [x] **[P2-03]** 홈페이지 (`/`) 개발
+  - 히어로 섹션 (최신 인터뷰, 풀스크린)
+  - 인터뷰 그리드 (최근 8개)
+  - 인물 미리보기 (최근 6개)
+- [x] **[P2-04]** 인터뷰 목록 페이지 (`/interviews`)
+- [x] **[P2-05]** 인터뷰 상세 페이지 (`/interviews/[slug]`)
+  - Q&A 블록 렌더링 (질문 bold + 네온, 답변 회색)
+  - 인물 블록 (사진, 이름, 직함, 링크)
+  - 관련 인터뷰 카드
+  - generateMetadata, generateStaticParams
+- [x] **[P2-06]** 인물 목록 페이지 (`/people`)
+- [x] **[P2-07]** 인물 프로필 페이지 (`/people/[slug]`)
+  - 소셜 링크, 태그, bio, 인터뷰 목록
+  - generateMetadata, generateStaticParams
+- [ ] **[P2-08]** Better-Auth 로그인/회원가입 UI
+- [ ] **[P2-09]** 댓글 기능 UI (로그인 필요)
+- [ ] **[P2-10]** 반응형 레이아웃 (모바일 QA)
+
+---
+
+### Todo — Phase 3: SEO + 콘텐츠 입력 (목표: 2026-04-13)
+
+- [ ] **[P3-01]** OG 태그 + 메타데이터 설정 (페이지별 동적 생성)
+- [ ] **[P3-02]** JSON-LD 구조화 데이터 (Person, Article 스키마)
+- [ ] **[P3-03]** `generateStaticParams` — 정적 경로 생성
+- [ ] **[P3-04]** 시딩: 인물 3~5명 어드민 입력
+- [ ] **[P3-05]** 시딩: 인터뷰 3~5개 어드민 입력
+- [ ] **[P3-06]** 편집자 어드민 사용 가이드 작성 (1페이지)
+- [ ] **[P3-07]** 크로스브라우저/모바일 최종 QA
+
+---
+
+### Todo — Launch (2026-04-15)
+
+- [ ] **[L-01]** 도메인 연결 (Vercel custom domain)
+- [ ] **[L-02]** Turso Production DB 환경변수 Vercel 설정
+- [ ] **[L-03]** 소셜 계정 준비 (Twitter/X, Instagram)
+
+---
+
+### Todo — Phase 4: 런칭 후 (우선순위 순)
+
+- [ ] **[V2-01]** 검색 기능 (인물명, 인터뷰 제목 full-text search)
+- [ ] **[V2-02]** 태그/카테고리 필터 페이지
+- [ ] **[V2-03]** 뉴스레터 구독 (이메일 수집 + 발송)
+- [ ] **[V2-04]** Payload webhook → revalidatePath (즉시 캐시 갱신)
+- [ ] **[V2-05]** 소셜 공유 버튼 최적화
+
+---
+
+### Completed (완료)
+- [x] **[D-01]** 레퍼런스 사이트 디자인 분석 (the-edit, eyesmag, design.co.kr)
+- [x] **[D-02]** 기술 스택 확정 (Next.js 16 + Payload CMS v3 + Turso + Better-Auth + shadcn/ui)
+- [x] **[D-03]** 문서 세트 초안 작성 (Lean Canvas, Product Specs, Roadmap, UI Design, DB Schema)
+- [x] **[P1-01]** 프로젝트 스캐폴딩 및 기반 세팅 완료 (2026-03-29)
+  - Next.js 16 + Payload CMS v3 초기화
+  - Turso 데이터베이스 생성 및 연결
+  - Better-Auth 설치 및 Route Handler 구성
+  - Tailwind v4 + shadcn/ui + 디자인 토큰 적용
+  - Payload Admin 패널 정상 기동 확인
+
+---
+
+## Related Documents
+- **Concept_Design**: [Roadmap](../01_Concept_Design/03_ROADMAP.md) - 페이즈별 목표 일정
+- **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - MVP 기능 정의
+- **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 스키마 구현 참조
+- **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - API 구현 참조
