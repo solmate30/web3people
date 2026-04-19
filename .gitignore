@@ -48,3 +48,6 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Solmate hook scripts (project-local)
+.claude/hooks/
