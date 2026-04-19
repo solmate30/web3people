@@ -2,6 +2,8 @@
 > Created: 2026-03-29 00:00
 > Last Updated: 2026-03-29 00:00
 
+https://www.notion.so/W3P-v3-33bbe87727b981e2bb25cb3a9f1780b8
+
 ## 1. Global Rubric Scorecard
 
 | 기준 | 목표 상태 | 비고 |
