@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateFrontendAfterChange,
+  revalidateFrontendAfterDelete,
+} from '@/hooks/revalidateFrontend'
 
 export const People: CollectionConfig = {
   slug: 'people',
@@ -124,4 +128,18 @@ export const People: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    afterChange: [
+      revalidateFrontendAfterChange({
+        detailPathPrefix: '/people',
+        paths: ['/', '/people', '/interviews'],
+      }),
+    ],
+    afterDelete: [
+      revalidateFrontendAfterDelete({
+        detailPathPrefix: '/people',
+        paths: ['/', '/people', '/interviews'],
+      }),
+    ],
+  },
 }

@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateFrontendAfterChange,
+  revalidateFrontendAfterDelete,
+} from '@/hooks/revalidateFrontend'
 
 export const Interviews: CollectionConfig = {
   slug: 'interviews',
@@ -157,13 +161,27 @@ export const Interviews: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [
-      ({ data }) => {
-        // 발행 상태로 변경 시 발행일 자동 설정
-        if (data.status === 'published' && !data.publishedAt) {
+      ({ data, originalDoc }) => {
+        const isPublishing = data.status === 'published' && originalDoc?.status !== 'published'
+
+        if (isPublishing && !data.publishedAt) {
           data.publishedAt = new Date().toISOString()
         }
+
         return data
       },
+    ],
+    afterChange: [
+      revalidateFrontendAfterChange({
+        detailPathPrefix: '/interviews',
+        paths: ['/', '/interviews'],
+      }),
+    ],
+    afterDelete: [
+      revalidateFrontendAfterDelete({
+        detailPathPrefix: '/interviews',
+        paths: ['/', '/interviews'],
+      }),
     ],
   },
 }
