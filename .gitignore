@@ -51,3 +51,7 @@ node_modules/
 
 # Solmate hook scripts (project-local)
 .claude/hooks/
+
+# Local agent/Codex runtime files
+.codex/
+.agent/skills/*/package-lock.json
