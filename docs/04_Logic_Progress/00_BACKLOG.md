@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-03-29 18:55
+> Last Updated: 2026-05-06 22:52
 
 ## 칸반 보드
 
@@ -75,8 +75,10 @@ _없음_
 - [x] **[P2-07]** 인물 프로필 페이지 (`/people/[slug]`)
   - 소셜 링크, 태그, bio, 인터뷰 목록
   - generateMetadata, generateStaticParams
-- [ ] **[P2-08]** Better-Auth 로그인/회원가입 UI
-- [ ] **[P2-09]** 댓글 기능 UI (로그인 필요)
+- [ ] **[P2-08]** 로그인/회원가입 진입점 UI 검토
+  - 상세 인증 구현은 **[V2-04] 독자 회원가입/로그인 기반 구축**에서 관리
+- [ ] **[P2-09]** 인터뷰 상세 댓글 영역 자리 표시자 검토
+  - 상세 댓글 구현은 **[V2-05] 댓글 기능**에서 관리
 - [ ] **[P2-10]** 반응형 레이아웃 (모바일 QA)
 
 ---
@@ -103,11 +105,35 @@ _없음_
 
 ### Todo — Phase 4: 런칭 후 (우선순위 순)
 
-- [ ] **[V2-01]** 검색 기능 (인물명, 인터뷰 제목 full-text search)
-- [ ] **[V2-02]** 태그/카테고리 필터 페이지
-- [ ] **[V2-03]** 뉴스레터 구독 (이메일 수집 + 발송)
-- [ ] **[V2-04]** Payload webhook → revalidatePath (즉시 캐시 갱신)
-- [ ] **[V2-05]** 소셜 공유 버튼 최적화
+- [ ] **[V2-01]** 검색 기반 콘텐츠 탐색
+  - [ ] 인터뷰 제목, 본문, 인물명 대상 full-text search 범위 확정
+  - [ ] 검색 결과 타입 구분: 인터뷰 / 인물
+  - [ ] 검색 결과 정렬 기준 정의: 관련도, 최신순, 인기순
+  - [ ] 검색 빈 결과 UI와 추천 태그 노출
+- [ ] **[V2-02]** 인터뷰/인물 태그 체계 정리
+  - [ ] 인물 태그 분류 정의: 직군, 분야, 생태계, 지역/언어, 관심사
+  - [ ] 인터뷰 태그 분류 정의: 주제, 산업, 독자 대상, 시리즈/기획
+  - [ ] 태그 중복/표기 규칙 정의: 영문 소문자 slug, 화면 표시명 분리
+  - [ ] Payload `Tags` 컬렉션과 `People`, `Interviews` 관계 필드 점검
+  - [ ] 어드민 입력 가이드에 태그 운영 규칙 추가
+- [ ] **[V2-03]** 태그/카테고리 필터 페이지
+  - [ ] `/tags/[slug]` 또는 검색 페이지 내 태그 필터 방식 결정
+  - [ ] 인물 목록과 인터뷰 목록에서 공통 태그 필터 사용
+  - [ ] 태그별 콘텐츠 수 표시 여부 결정
+- [ ] **[V2-04]** 독자 회원가입/로그인 기반 구축
+  - [ ] 로그인 옵션 확정: Wallet, Google, Email
+  - [ ] 댓글 작성 전 로그인 CTA 문구 적용
+  - [ ] 일반 독자 계정과 Payload 어드민/편집자 계정 분리 유지
+  - [ ] 독자 프로필 또는 Better-Auth user/account 직접 사용 여부 결정
+- [ ] **[V2-05]** 댓글 기능
+  - [ ] 인터뷰 상세 페이지 하단 댓글 영역 추가
+  - [ ] 로그인 사용자만 댓글 작성 가능
+  - [ ] 댓글 기본 상태 `pending` 저장
+  - [ ] Payload Admin에서 댓글 승인/거부 운영 플로우 확인
+  - [ ] 스팸 대응 기준 정의: rate limit, 이메일 인증 강화, 승인 정책
+- [ ] **[V2-06]** 뉴스레터 구독 (이메일 수집 + 발송)
+- [ ] **[V2-07]** Payload webhook → revalidatePath (즉시 캐시 갱신)
+- [ ] **[V2-08]** 소셜 공유 버튼 최적화
 
 ---
 
@@ -127,5 +153,6 @@ _없음_
 ## Related Documents
 - **Concept_Design**: [Roadmap](../01_Concept_Design/03_ROADMAP.md) - 페이즈별 목표 일정
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - MVP 기능 정의
+- **Concept_Design**: [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md) - 댓글/회원가입/아이덴티티 전략
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 스키마 구현 참조
 - **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - API 구현 참조
