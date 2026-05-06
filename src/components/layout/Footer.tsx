@@ -24,6 +24,14 @@ export function Footer() {
             <Link href="/people" className="hover:text-[var(--color-text-primary)] transition-colors">
               People
             </Link>
+            <a
+              href="https://www.solmatecollective.online/"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-[var(--color-text-primary)] transition-colors"
+            >
+              Solmate
+            </a>
           </nav>
         </div>
 

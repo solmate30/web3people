@@ -26,6 +26,14 @@ export function Header() {
           >
             People
           </Link>
+          <a
+            href="https://www.solmatecollective.online/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+          >
+            Solmate
+          </a>
         </nav>
       </div>
     </header>

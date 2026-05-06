@@ -1,6 +1,6 @@
 # UI Design Guide — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-03-29 19:00
+> Last Updated: 2026-05-06 00:00
 
 ## 1. 디자인 포지셔닝
 
@@ -130,7 +130,7 @@ gap: 32px
 
 - 고정(sticky), 배경 blur + 반투명 (`backdrop-filter: blur(12px)`)
 - 로고 (좌측) + 네비게이션 (우측)
-- 네비: Interviews / People
+- 네비: Interviews / People / Solmate (`https://www.solmatecollective.online/`, 새 탭)
 - 모바일: 햄버거 메뉴
 
 ### 5.4 인터뷰 본문 (Q&A 블록)
