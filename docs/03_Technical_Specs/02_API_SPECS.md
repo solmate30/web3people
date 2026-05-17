@@ -1,6 +1,6 @@
 # API Specs — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:05
+> Last Updated: 2026-05-17 16:58
 
 ## 1. 개요
 
@@ -205,6 +205,7 @@ if (doc.status !== 'published') notFound()
 ---
 
 ## Related Documents
+- **Technical_Specs**: [Development Principles](./00_DEVELOPMENT_PRINCIPLES.md) - API 구현과 검증 기준
 - **Technical_Specs**: [DB Schema](./01_DB_SCHEMA.md) - 컬렉션 필드 및 관계 설계
 - **Technical_Specs**: [Reader Auth, Board, Comments Spec](./03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 참여 API 설계 기준
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 페이지별 기능 명세

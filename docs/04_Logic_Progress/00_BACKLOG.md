@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:53
+> Last Updated: 2026-05-17 16:58
 
 ## 칸반 보드
 
@@ -112,7 +112,7 @@ _없음_
   - 의존성: [Code Review Report](./02_CODE_REVIEW.md)
   - 완료 기준: 운영 env 검증, Payload access helper, 댓글 access 재설계, 공개 조회 helper 기준 확정
   - [x] 1차 코드 리뷰 리포트 작성
-  - [ ] `00_DEVELOPMENT_PRINCIPLES.md` 신설
+  - [x] `00_DEVELOPMENT_PRINCIPLES.md` 신설
   - [x] 운영 필수 env fail-fast 검증 추가
   - [x] Payload DB push 명시적 opt-in 처리
   - [x] `src/access/` RBAC helper 정리
@@ -211,6 +211,7 @@ _없음_
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - MVP 기능 정의
 - **Concept_Design**: [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md) - 댓글/회원가입/아이덴티티 전략
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 스키마 구현 참조
+- **Technical_Specs**: [Development Principles](../03_Technical_Specs/00_DEVELOPMENT_PRINCIPLES.md) - 개발/검증/운영 안전 기준
 - **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - API 구현 참조
 - **Technical_Specs**: [Reader Auth, Board, Comments Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 인증/게시판/댓글 구현 기준
 - **Logic_Progress**: [Code Review Report](./02_CODE_REVIEW.md) - 기능 고도화 전 코드 리스크와 선행 정리 항목

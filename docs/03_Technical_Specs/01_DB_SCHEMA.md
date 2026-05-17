@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:53
+> Last Updated: 2026-05-17 16:58
 
 ## 1. 개요
 
@@ -223,6 +223,7 @@ CLOUDINARY_API_SECRET=...
 ---
 
 ## Related Documents
+- **Technical_Specs**: [Development Principles](./00_DEVELOPMENT_PRINCIPLES.md) - 개발/검증/운영 안전 기준
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 기능 명세 및 필드 요구사항
 - **Technical_Specs**: [API Specs](./02_API_SPECS.md) - 데이터 조회 API 설계
 - **Technical_Specs**: [Reader Auth, Board, Comments Spec](./03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 참여 기능 데이터 모델 방향
