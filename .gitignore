@@ -54,4 +54,4 @@ node_modules/
 
 # Local agent/Codex runtime files
 .codex/
-.agent/skills/*/package-lock.json
+.agent/skills/
