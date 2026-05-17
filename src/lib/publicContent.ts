@@ -16,7 +16,7 @@ type FindBySlugOptions = {
 }
 
 type SearchType = 'all' | 'interviews' | 'people'
-type SearchSort = 'relevance' | 'latest' | 'popular'
+type SearchSort = 'relevance' | 'latest'
 
 export type SearchContentOptions = {
   query: string
@@ -212,7 +212,7 @@ export async function searchPublishedContent(
   const [interviewsRes, peopleRes] = await Promise.all([
     type === 'people'
       ? Promise.resolve({ docs: [] as Interview[] })
-      : findPublishedInterviews(payload, { limit: 100, depth: 2 }),
+      : findPublishedInterviews(payload, { limit: 100, depth: 1 }),
     type === 'interviews'
       ? Promise.resolve({ docs: [] as Person[] })
       : findPublishedPeople(payload, { limit: 100, depth: 1 }),
@@ -298,7 +298,6 @@ function compareSearchResults(
   sort: SearchSort,
 ): number {
   if (sort === 'latest') return dateValue(b.date) - dateValue(a.date)
-  if (sort === 'popular') return b.score - a.score || dateValue(b.date) - dateValue(a.date)
 
   return b.score - a.score || dateValue(b.date) - dateValue(a.date)
 }

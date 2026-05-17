@@ -21,9 +21,7 @@ type SearchPageProps = {
 }
 
 type SearchType = 'all' | 'interviews' | 'people'
-type SearchSort = 'relevance' | 'latest' | 'popular'
-
-export const revalidate = 60
+type SearchSort = 'relevance' | 'latest'
 
 export const metadata: Metadata = {
   title: 'Search',
@@ -247,7 +245,6 @@ function SortLinks({
   const items: Array<{ label: string; value: SearchSort }> = [
     { label: 'Relevance', value: 'relevance' },
     { label: 'Latest', value: 'latest' },
-    { label: 'Popular', value: 'popular' },
   ]
 
   return (
@@ -282,7 +279,7 @@ function parseType(type: string | undefined): SearchType {
 }
 
 function parseSort(sort: string | undefined): SearchSort {
-  if (sort === 'latest' || sort === 'popular') return sort
+  if (sort === 'latest') return sort
   return 'relevance'
 }
 
