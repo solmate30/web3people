@@ -15,6 +15,12 @@ export function Header() {
         {/* 네비게이션 */}
         <nav className="flex items-center gap-8">
           <Link
+            href="/search"
+            className="text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+          >
+            Search
+          </Link>
+          <Link
             href="/interviews"
             className="text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
           >

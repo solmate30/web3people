@@ -1,6 +1,6 @@
 # API Specs — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:58
+> Last Updated: 2026-05-17 17:09
 
 ## 1. 개요
 
@@ -127,6 +127,33 @@ await payload.find({
   depth: 2,
 })
 ```
+
+---
+
+### 2.6 검색 (`/search`)
+
+검색은 Next.js 서버 페이지에서 Payload Local API를 사용한다. 별도 공개 write API는 없다.
+
+입력:
+
+| Query | 값 | 설명 |
+|:---|:---|:---|
+| `q` | string | 검색어 |
+| `type` | `all` / `interviews` / `people` | 결과 타입 필터 |
+| `sort` | `relevance` / `latest` / `popular` | 정렬 기준 |
+
+검색 범위:
+
+- 인터뷰: 제목, 요약, Q&A 질문/답변, text 블록, 이미지 캡션, 인물명, 인물 조직, 태그명
+- 인물: 이름, 영문 이름, 직함, 조직, 국가, bio, 태그명
+
+정렬 기준:
+
+- `relevance`: 제목/요약/이름/태그 등 우선 필드와 본문 매칭 점수
+- `latest`: 발행일 또는 생성일 최신순
+- `popular`: 현재 조회수/인기 지표가 없으므로 relevance + latest fallback
+
+결과 UI는 인터뷰와 인물을 구분해 렌더링한다. 검색어가 없거나 결과가 없을 때는 추천 태그를 노출한다.
 
 ---
 
