@@ -13,13 +13,27 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function submitEmailAuth(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setIsLoading(true)
     setError(null)
+
+    if (mode === 'signup') {
+      if (password.length < 8) {
+        setError('비밀번호는 8자 이상이어야 합니다.')
+        return
+      }
+
+      if (password !== passwordConfirm) {
+        setError('비밀번호가 일치하지 않습니다.')
+        return
+      }
+    }
+
+    setIsLoading(true)
 
     try {
       const result = mode === 'login'
@@ -86,6 +100,7 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
               type="button"
               onClick={() => {
                 setMode('login')
+                setPasswordConfirm('')
                 setError(null)
               }}
               className={mode === 'login' ? activeTabClass : inactiveTabClass}
@@ -96,6 +111,7 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
               type="button"
               onClick={() => {
                 setMode('signup')
+                setPasswordConfirm('')
                 setError(null)
               }}
               className={mode === 'signup' ? activeTabClass : inactiveTabClass}
@@ -150,6 +166,23 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
                 minLength={8}
               />
             </label>
+
+            {mode === 'signup' && (
+              <label className="block">
+                <span className="font-mono text-xs uppercase tracking-widest text-[var(--color-text-muted)]">
+                  Confirm Password
+                </span>
+                <input
+                  required
+                  type="password"
+                  value={passwordConfirm}
+                  onChange={(event) => setPasswordConfirm(event.target.value)}
+                  className={inputClass}
+                  autoComplete="new-password"
+                  minLength={8}
+                />
+              </label>
+            )}
 
             {error && (
               <p className="border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300">
