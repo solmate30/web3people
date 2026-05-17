@@ -11,11 +11,13 @@ describe('API', () => {
     payload = await getPayload({ config: payloadConfig })
   })
 
-  it('fetches users', async () => {
-    const users = await payload.find({
-      collection: 'users',
-    })
-    expect(users).toBeDefined()
+  it('blocks anonymous user listing when access control is enforced', async () => {
+    await expect(
+      payload.find({
+        collection: 'users',
+        overrideAccess: false,
+      }),
+    ).rejects.toThrow()
   })
 
   it('blocks anonymous comment creation when access control is enforced', async () => {

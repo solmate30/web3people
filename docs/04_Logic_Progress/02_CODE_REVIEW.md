@@ -1,6 +1,6 @@
 # Code Review Report
 > Created: 2026-05-17 16:11
-> Last Updated: 2026-05-17 16:41
+> Last Updated: 2026-05-17 16:53
 
 ## 1. Review Scope
 
@@ -227,6 +227,7 @@ pnpm build
 - Severity: Medium
 - Area: QA / Regression
 - Evidence: `tests/int/api.int.spec.ts:14-19`
+- Status: Partially mitigated in `tests/int/api.int.spec.ts`
 
 통합 테스트는 users 조회 smoke test에 가깝다. 앞으로 로그인/댓글/게시판을 붙이면 권한 회귀를 막을 테스트가 부족하다.
 
@@ -237,6 +238,69 @@ pnpm build
 - 댓글 작성자 이메일은 클라이언트 입력이 아닌 세션에서 저장
 - public page는 draft interview/person을 조회하지 않음
 - editor/admin 권한 차이 검증
+
+### F-014. Users 컬렉션 create access가 명시되지 않았다
+
+- Severity: High
+- Area: Admin RBAC
+- Evidence: `src/collections/Users.ts`
+- Status: Resolved in `src/collections/Users.ts`
+
+Payload admin 사용자 생성 권한이 명시되지 않으면 역할 확장 시 권한 의도가 불분명해진다. `create: isAdmin`을 추가해 admin만 Payload 사용자 계정을 만들 수 있도록 제한했다.
+
+### F-015. 상세 페이지 metadata와 page가 동일 콘텐츠를 중복 조회한다
+
+- Severity: Medium
+- Area: Performance
+- Evidence: `src/app/(frontend)/interviews/[slug]/page.tsx`, `src/app/(frontend)/people/[slug]/page.tsx`
+- Status: Resolved with React `cache()`
+
+`generateMetadata`와 페이지 컴포넌트가 같은 slug 문서를 각각 조회하던 구조를 module-level `cache()` helper로 정리했다.
+
+### F-016. 정적 slug 수집에 고정 limit 상한이 있었다
+
+- Severity: Medium
+- Area: Build / Scale
+- Evidence: `src/lib/publicContent.ts`
+- Status: Resolved with pagination loop
+
+`limit: 1000` 고정 상한을 제거하고, Payload pagination을 순회해 발행된 인터뷰/인물 slug를 모두 수집하도록 변경했다.
+
+### F-017. 인터뷰 상세 읽기 시간이 하드코딩되어 있었다
+
+- Severity: Medium
+- Area: UX / Trust
+- Evidence: `src/app/(frontend)/interviews/[slug]/page.tsx`
+- Status: Resolved
+
+`8 MIN READ` 고정 문구를 제거하고, 제목/요약/Q&A/text/image caption 텍스트를 기반으로 읽기 시간을 계산한다.
+
+### F-018. 관련 인터뷰가 실제 연관성 없이 최신순이었다
+
+- Severity: Medium
+- Area: UX / Content Discovery
+- Evidence: `src/lib/publicContent.ts`
+- Status: Resolved
+
+현재 인터뷰의 tag id를 기준으로 관련 인터뷰를 조회하도록 변경했다. 태그가 없으면 기존처럼 최신 다른 인터뷰 fallback으로 동작한다.
+
+### F-019. Better Auth trusted origins가 단일 URL만 지원했다
+
+- Severity: Low
+- Area: Deployment
+- Evidence: `src/lib/auth.ts`, `src/lib/env.ts`
+- Status: Resolved
+
+`BETTER_AUTH_TRUSTED_ORIGINS` 콤마 구분 env를 추가해 preview/staging origin을 함께 허용할 수 있도록 했다.
+
+### F-020. 홈페이지 metadata가 없었다
+
+- Severity: Medium
+- Area: SEO
+- Evidence: `src/app/(frontend)/page.tsx`
+- Status: Resolved
+
+홈페이지에 title, description, Open Graph 기본 metadata를 추가했다.
 
 ## 4. Verification Result
 

@@ -40,16 +40,30 @@ function requiredAnyInProductionWithFallback(names: string[], fallback: string):
   return value ?? fallback
 }
 
+function listEnv(name: string): string[] {
+  return (process.env[name] ?? '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+}
+
+function uniqueValues(values: string[]): string[] {
+  return [...new Set(values)]
+}
+
+const appUrl = requiredAnyInProductionWithFallback(
+  ['BETTER_AUTH_URL', 'NEXT_PUBLIC_APP_URL'],
+  'http://localhost:3000',
+)
+
 export const env = {
   isProduction,
   allowDatabasePush: !isProduction && process.env.PAYLOAD_DB_PUSH === 'true',
   payloadSecret: requiredInProductionWithFallback('PAYLOAD_SECRET', 'dev-payload-secret'),
   databaseUrl: requiredInProductionWithFallback('DATABASE_URL', 'file:./payload.db'),
   databaseAuthToken: requiredInProduction('DATABASE_AUTH_TOKEN'),
-  appUrl: requiredAnyInProductionWithFallback(
-    ['BETTER_AUTH_URL', 'NEXT_PUBLIC_APP_URL'],
-    'http://localhost:3000',
-  ),
+  appUrl,
+  trustedOrigins: uniqueValues([appUrl, ...listEnv('BETTER_AUTH_TRUSTED_ORIGINS')]),
   betterAuthSecret: requiredInProductionWithFallback('BETTER_AUTH_SECRET', 'dev-better-auth-secret'),
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,

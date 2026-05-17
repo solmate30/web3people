@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { cache } from 'react'
 import { getPayload } from '@/lib/getPayload'
 import { cldUrl, transforms } from '@/lib/cloudinary'
 import { Header } from '@/components/layout/Header'
@@ -16,6 +17,15 @@ import type { Interview, Media, Tag } from '@/payload-types'
 
 export const revalidate = 60
 
+const getPublishedPerson = cache(async (slug: string) => {
+  const payload = await getPayload()
+  const { docs } = await findPublishedPersonBySlug(payload, slug, {
+    depth: 1,
+  })
+
+  return docs[0] ?? null
+})
+
 export async function generateStaticParams() {
   const payload = await getPayload()
   const { docs } = await findPublishedPersonSlugs(payload)
@@ -28,11 +38,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const payload = await getPayload()
-  const { docs } = await findPublishedPersonBySlug(payload, slug, {
-    depth: 1,
-  })
-  const person = docs[0]
+  const person = await getPublishedPerson(slug)
   if (!person) return {}
 
   const photo = person.photo as Media | null
@@ -53,11 +59,7 @@ export default async function PersonProfilePage({
   const { slug } = await params
   const payload = await getPayload()
 
-  const { docs } = await findPublishedPersonBySlug(payload, slug, {
-    depth: 1,
-  })
-
-  const person = docs[0]
+  const person = await getPublishedPerson(slug)
   if (!person) notFound()
 
   const photo = person.photo as Media | null

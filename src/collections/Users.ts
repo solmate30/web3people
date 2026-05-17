@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { adminOrSelf, isAdminField } from '@/access/admin'
+import { adminOrSelf, isAdmin, isAdminField } from '@/access/admin'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -9,6 +9,7 @@ export const Users: CollectionConfig = {
   },
   auth: true,
   access: {
+    create: isAdmin,
     read: adminOrSelf,
     update: adminOrSelf,
     delete: ({ req }) => req.user?.role === 'admin',

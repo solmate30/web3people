@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { getPayload } from '@/lib/getPayload'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -10,6 +11,16 @@ import { findPublishedInterviews, findPublishedPeople } from '@/lib/publicConten
 import type { Interview, Media, Person } from '@/payload-types'
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: 'Web3People',
+  description: 'web3 생태계를 만들어가는 빌더, 창업자, 투자자들의 인물과 인터뷰를 만나는 매거진',
+  openGraph: {
+    title: 'Web3People',
+    description: 'web3 생태계를 만들어가는 사람들의 깊이 있는 인터뷰',
+    type: 'website',
+  },
+}
 
 export default async function HomePage() {
   const payload = await getPayload()

@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:23
+> Last Updated: 2026-05-17 16:53
 
 ## 칸반 보드
 
@@ -119,6 +119,14 @@ _없음_
   - [x] 공개 콘텐츠 조회 helper 작성
   - [x] `/my-route` 예제 API 제거
   - [x] 비회원 댓글 생성 차단 통합 테스트 추가
+  - [x] Payload `Users` create access를 admin 전용으로 제한
+  - [x] 홈 metadata 추가
+  - [x] 상세 페이지 중복 조회 cache 적용
+  - [x] 정적 slug 수집 페이지네이션 적용
+  - [x] 읽기 시간 자동 계산 적용
+  - [x] 태그 기반 관련 인터뷰 조회 적용
+  - [x] Better Auth trusted origins 확장 env 적용
+  - [x] users access 통합 테스트 보강
 - [ ] **[V2-01]** 검색 기반 콘텐츠 탐색
   - 일정: Phase 4A 1순위
   - 의존성: `Interviews`, `People`, `Tags` 공개 데이터 조회 안정화

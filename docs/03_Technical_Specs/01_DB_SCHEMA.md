@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:41
+> Last Updated: 2026-05-17 16:53
 
 ## 1. 개요
 
@@ -212,6 +212,7 @@ PAYLOAD_DB_PUSH=false                 # 기본 off. 로컬에서 의도적으로
 BETTER_AUTH_SECRET=...                # 인증 서명 키 (운영 필수)
 BETTER_AUTH_URL=http://localhost:3000 # 서버 auth base URL. 배포: 프로덕션 도메인
 NEXT_PUBLIC_APP_URL=http://localhost:3000  # 클라이언트 auth base URL. 배포: 프로덕션 도메인
+BETTER_AUTH_TRUSTED_ORIGINS=https://preview.example.com,https://staging.example.com
 
 # Cloudinary 이미지 스토리지
 CLOUDINARY_CLOUD_NAME=...

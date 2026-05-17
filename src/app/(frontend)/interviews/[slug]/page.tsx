@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { cache } from 'react'
 import { getPayload, formatDate } from '@/lib/getPayload'
 import { cldUrl, transforms } from '@/lib/cloudinary'
 import { Header } from '@/components/layout/Header'
@@ -17,6 +18,15 @@ import type { Interview, Media, Person, Tag } from '@/payload-types'
 
 export const revalidate = 60
 
+const getPublishedInterview = cache(async (slug: string) => {
+  const payload = await getPayload()
+  const { docs } = await findPublishedInterviewBySlug(payload, slug, {
+    depth: 2,
+  })
+
+  return docs[0] ?? null
+})
+
 export async function generateStaticParams() {
   const payload = await getPayload()
   const { docs } = await findPublishedInterviewSlugs(payload)
@@ -29,11 +39,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const payload = await getPayload()
-  const { docs } = await findPublishedInterviewBySlug(payload, slug, {
-    depth: 1,
-  })
-  const interview = docs[0]
+  const interview = await getPublishedInterview(slug)
   if (!interview) return {}
 
   const cover = interview.coverImage as Media | null
@@ -57,22 +63,21 @@ export default async function InterviewDetailPage({
   const { slug } = await params
   const payload = await getPayload()
 
-  const { docs } = await findPublishedInterviewBySlug(payload, slug, {
-    depth: 2,
-  })
-
-  const interview = docs[0]
+  const interview = await getPublishedInterview(slug)
   if (!interview) notFound()
 
   const cover = interview.coverImage as Media | null
   const person = interview.subject as Person | null
   const personPhoto = person?.photo as Media | null
   const tags = (interview.tags as Tag[] | null) ?? []
+  const tagIds = tags.map((tag) => tag.id)
+  const readMinutes = estimateInterviewReadMinutes(interview)
 
   // 추천 인터뷰
   const { docs: related } = await findRelatedPublishedInterviews(payload, slug, {
     limit: 3,
     depth: 2,
+    tagIds,
   })
 
   return (
@@ -120,7 +125,7 @@ export default async function InterviewDetailPage({
                   <time>{formatDate(interview.publishedAt)}</time>
                 )}
                 <span>·</span>
-                <span>8 MIN READ</span>
+                <span>{readMinutes} MIN READ</span>
               </div>
 
               {/* 요약 */}
@@ -290,6 +295,36 @@ export default async function InterviewDetailPage({
       <Footer />
     </>
   )
+}
+
+function estimateInterviewReadMinutes(interview: Interview): number {
+  const text = [
+    interview.title,
+    interview.excerpt,
+    ...(interview.content?.flatMap((block) => {
+      if (block.blockType === 'qa') return [block.question, extractText(block.answer)]
+      if (block.blockType === 'text') return [extractText(block.content)]
+      if (block.blockType === 'image') return [block.caption ?? '']
+      return []
+    }) ?? []),
+  ].join(' ')
+
+  const words = text.trim().split(/\s+/).filter(Boolean).length
+  const nonWhitespaceChars = text.replace(/\s/g, '').length
+  const estimatedByWords = Math.ceil(words / 220)
+  const estimatedByChars = Math.ceil(nonWhitespaceChars / 700)
+
+  return Math.max(1, Math.max(estimatedByWords, estimatedByChars))
+}
+
+function extractText(value: unknown): string {
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  if (!value) return ''
+  if (Array.isArray(value)) return value.map(extractText).join(' ')
+  if (typeof value !== 'object') return ''
+
+  return Object.values(value as Record<string, unknown>).map(extractText).join(' ')
 }
 
 function SocialLink({ href, label }: { href: string; label: string }) {

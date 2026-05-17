@@ -6,6 +6,10 @@ type FindOptions = {
   sort?: string
 }
 
+type RelatedInterviewOptions = FindOptions & {
+  tagIds?: Array<number | string>
+}
+
 type FindBySlugOptions = {
   depth?: number
 }
@@ -22,14 +26,31 @@ export function findPublishedInterviews(payload: Payload, options: FindOptions =
 }
 
 export function findPublishedInterviewSlugs(payload: Payload) {
-  return payload.find({
-    collection: 'interviews',
-    where: { status: { equals: 'published' } },
-    select: { slug: true },
-    limit: 1000,
-    depth: 0,
-    overrideAccess: false,
-  })
+  return collectPublishedInterviewSlugs(payload)
+}
+
+async function collectPublishedInterviewSlugs(payload: Payload) {
+  const slugs: Array<{ slug: string }> = []
+  let page = 1
+  let totalPages = 1
+
+  do {
+    const result = await payload.find({
+      collection: 'interviews',
+      where: { status: { equals: 'published' } },
+      select: { slug: true },
+      limit: 100,
+      page,
+      depth: 0,
+      overrideAccess: false,
+    })
+
+    slugs.push(...result.docs.map((doc) => ({ slug: doc.slug })))
+    totalPages = result.totalPages
+    page += 1
+  } while (page <= totalPages)
+
+  return { docs: slugs }
 }
 
 export function findPublishedInterviewBySlug(
@@ -49,14 +70,17 @@ export function findPublishedInterviewBySlug(
 export function findRelatedPublishedInterviews(
   payload: Payload,
   slug: string,
-  options: FindOptions = {},
+  options: RelatedInterviewOptions = {},
 ) {
+  const tagIds = options.tagIds?.filter(Boolean) ?? []
+
   return payload.find({
     collection: 'interviews',
     where: {
       and: [
         { status: { equals: 'published' } },
         { slug: { not_equals: slug } },
+        ...(tagIds.length > 0 ? [{ tags: { in: tagIds } }] : []),
       ],
     },
     sort: options.sort ?? '-publishedAt',
@@ -78,14 +102,31 @@ export function findPublishedPeople(payload: Payload, options: FindOptions = {})
 }
 
 export function findPublishedPersonSlugs(payload: Payload) {
-  return payload.find({
-    collection: 'people',
-    where: { status: { equals: 'published' } },
-    select: { slug: true },
-    limit: 1000,
-    depth: 0,
-    overrideAccess: false,
-  })
+  return collectPublishedPersonSlugs(payload)
+}
+
+async function collectPublishedPersonSlugs(payload: Payload) {
+  const slugs: Array<{ slug: string }> = []
+  let page = 1
+  let totalPages = 1
+
+  do {
+    const result = await payload.find({
+      collection: 'people',
+      where: { status: { equals: 'published' } },
+      select: { slug: true },
+      limit: 100,
+      page,
+      depth: 0,
+      overrideAccess: false,
+    })
+
+    slugs.push(...result.docs.map((doc) => ({ slug: doc.slug })))
+    totalPages = result.totalPages
+    page += 1
+  } while (page <= totalPages)
+
+  return { docs: slugs }
 }
 
 export function findPublishedPersonBySlug(
