@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-03-29 18:55
+> Last Updated: 2026-05-17 16:05
 
 ## 1. 개요
 
@@ -15,6 +15,8 @@
 
 ### 2.1 `people` — 인물 프로필
 
+아래 이름은 Payload 컬렉션 필드명 기준이다. SQLite 물리 컬럼명은 Payload 어댑터가 내부적으로 관리한다.
+
 | 컬럼 | 타입 | 필수 | 설명 |
 |:---|:---|:---:|:---|
 | id | uuid | Y | PK (Payload 자동 생성) |
@@ -26,13 +28,13 @@
 | organization | text | N | 소속 (회사/프로젝트명) |
 | country | text | N | 국가 (ISO 코드, 예: KR, US) |
 | bio | richText | Y | 소개 (롱폼, Lexical 에디터) |
-| social_twitter | text | N | Twitter/X URL |
-| social_linkedin | text | N | LinkedIn URL |
-| social_website | text | N | 개인/프로젝트 웹사이트 |
+| socials.twitter | text | N | Twitter/X URL |
+| socials.linkedin | text | N | LinkedIn URL |
+| socials.website | text | N | 개인/프로젝트 웹사이트 |
 | tags | relationship | N | Tag[] — 다대다 |
 | status | select | Y | draft / published |
-| created_at | timestamp | Y | Payload 자동 |
-| updated_at | timestamp | Y | Payload 자동 |
+| createdAt | timestamp | Y | Payload 자동 |
+| updatedAt | timestamp | Y | Payload 자동 |
 
 **인덱스:** `slug` (unique), `status`
 
@@ -46,16 +48,16 @@
 | title | text | Y | 인터뷰 제목 |
 | slug | text | Y | URL 슬러그 (고유값) |
 | subject | relationship | Y | People → 1개 인물 |
-| cover_image | upload | Y | 대표 이미지 (Media 참조) |
+| coverImage | upload | Y | 대표 이미지 (Media 참조) |
 | excerpt | textarea | Y | 요약 (140자 내외, 카드 표시용) |
-| content | richText | Y | 본문 (Q&A 블록 포함) |
-| published_at | timestamp | N | 발행일 (null이면 미발행) |
+| content | blocks | Y | 본문 (qa / text / image 블록) |
+| publishedAt | timestamp | N | 발행일 (발행 시 자동 설정) |
 | status | select | Y | draft / published |
 | tags | relationship | N | Tag[] — 다대다 |
-| created_at | timestamp | Y | Payload 자동 |
-| updated_at | timestamp | Y | Payload 자동 |
+| createdAt | timestamp | Y | Payload 자동 |
+| updatedAt | timestamp | Y | Payload 자동 |
 
-**인덱스:** `slug` (unique), `status`, `published_at DESC`
+**인덱스:** `slug` (unique), `status`, `publishedAt DESC` 정렬 사용
 
 ---
 
@@ -66,7 +68,7 @@
 | id | uuid | Y | PK |
 | name | text | Y | 태그명 (예: DeFi, NFT, Layer2) |
 | slug | text | Y | URL 슬러그 (고유값) |
-| created_at | timestamp | Y | Payload 자동 |
+| createdAt | timestamp | Y | Payload 자동 |
 
 **샘플 태그:** DeFi, NFT, Layer2, GameFi, DAO, Infrastructure, AI+Web3, Founder, Investor, Developer, Artist
 
@@ -109,9 +111,33 @@ Payload CMS 기본 Users 컬렉션 사용. 어드민/편집자 전용.
 
 ---
 
-### 2.6 Better-Auth 테이블 — 일반 독자 인증
+### 2.6 `comments` — 댓글
 
-Better-Auth가 Turso DB에 자동으로 생성하는 테이블. 댓글 작성 등 일반 유저 전용.
+현재 컬렉션은 구현되어 있으나, 고도화 정책에 맞춰 상태 모델 재정의가 필요하다.
+
+| 필드 | 타입 | 필수 | 설명 |
+|:---|:---|:---:|:---|
+| id | uuid | Y | PK |
+| interview | relationship | Y | 댓글 대상 인터뷰 |
+| authorName | text | Y | 작성자 표시명 |
+| authorEmail | email | Y | Better Auth 유저 이메일, 공개하지 않음 |
+| content | textarea | Y | 댓글 내용 |
+| status | select | Y | 현재 pending / approved / rejected, 향후 visible / hidden / removed 검토 |
+| createdAt | timestamp | Y | Payload 자동 |
+| updatedAt | timestamp | Y | Payload 자동 |
+
+고도화 정책:
+
+- 댓글은 로그인 독자만 작성한다.
+- 승인 없이 즉시 공개한다.
+- 작성자 정보는 클라이언트 입력이 아니라 Better Auth 세션에서 결정한다.
+- Payload REST 직접 생성은 막고 서버 Route Handler에서 검증 후 생성한다.
+
+---
+
+### 2.7 Better Auth 테이블 — 일반 독자 인증
+
+Better Auth가 Turso DB에 자동으로 생성하는 테이블. 댓글/게시판 작성 등 일반 유저 전용.
 
 | 테이블 | 설명 |
 |:---|:---|
@@ -120,7 +146,23 @@ Better-Auth가 Turso DB에 자동으로 생성하는 테이블. 댓글 작성 �
 | `account` | OAuth 계정 연결 (향후 소셜 로그인 확장 시) |
 | `verification` | 이메일 인증 토큰 |
 
-**인증 방식:** 이메일 + 비밀번호 (현재), 소셜 로그인 (v2 예정)
+**인증 방식:** 이메일 + 비밀번호 (현재), Google/GitHub/Wallet 로그인은 고도화 단계에서 기존 구현 패턴 확인 후 확장.
+
+---
+
+### 2.8 `boardPosts` — 게시판 글 (계획)
+
+아직 구현 전이다. 독립 게시판, 인터뷰 연결 게시판, 인물 연결 게시판을 하나의 모델로 처리하는 방향을 검토한다.
+
+| 필드 | 타입 | 필수 | 설명 |
+|:---|:---|:---:|:---|
+| title | text | Y | 게시글 제목 |
+| content | richText | Y | 게시글 본문 |
+| authorId | text | Y | Better Auth user id |
+| authorName | text | Y | 작성자 표시명 |
+| relatedInterview | relationship | N | 연결 인터뷰 |
+| relatedPerson | relationship | N | 연결 인물 |
+| visibility | select | Y | published / hidden / removed |
 
 ---
 
@@ -132,6 +174,9 @@ people N──M tags         (인물은 여러 태그를 가질 수 있음)
 interviews N──M tags     (인터뷰도 여러 태그를 가질 수 있음)
 interviews N──1 media    (커버 이미지)
 people N──1 media        (프로필 사진)
+interviews 1──N comments (인터뷰 댓글)
+people 1──N boardPosts   (계획: 인물 연결 게시글)
+interviews 1──N boardPosts (계획: 인터뷰 연결 게시글)
 ```
 
 ---
@@ -144,6 +189,7 @@ src/
     People.ts
     Interviews.ts
     Tags.ts
+    Comments.ts
     Media.ts
     Users.ts
   payload.config.ts
@@ -165,8 +211,10 @@ PAYLOAD_SECRET=...                    # JWT 서명 키 (32자 이상 랜덤)
 BETTER_AUTH_SECRET=...                # 인증 서명 키
 NEXT_PUBLIC_APP_URL=http://localhost:3000  # 개발: localhost, 배포: 프로덕션 도메인
 
-# 이미지 스토리지 (미정)
-# BLOB_READ_WRITE_TOKEN=...           # Vercel Blob (선택)
+# Cloudinary 이미지 스토리지
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
 ```
 
 ---
@@ -174,4 +222,5 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000  # 개발: localhost, 배포: 프로�
 ## Related Documents
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 기능 명세 및 필드 요구사항
 - **Technical_Specs**: [API Specs](./02_API_SPECS.md) - 데이터 조회 API 설계
+- **Technical_Specs**: [Reader Auth, Board, Comments Spec](./03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 참여 기능 데이터 모델 방향
 - **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - 스키마 구현 태스크

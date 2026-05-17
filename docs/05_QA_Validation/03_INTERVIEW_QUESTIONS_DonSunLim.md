@@ -1,4 +1,6 @@
 # W3P 인터뷰 사전 질문지: 임동선 (Don Sun Lim / Agwn)
+> Created: 2026-05-17 16:05
+> Last Updated: 2026-05-17 16:05
 
 ## 📌 인터뷰 개요
 - **대상자**: 임동선 (루디움 CEO, 포뮬라랩스 CSO)
@@ -27,3 +29,9 @@
 ---
 
 > 본 문서는 대상자에게 이메일로 즉시 발송할 수 있도록 다듬어진 내용입니다. 이메일 본문에 복사하여 붙여넣으신 후 바로 발송하시면 됩니다.
+
+## Related Documents
+
+- **QA_Validation**: [Interview Question Bank v3](./02_INTERVIEW_QUESTION_BANK_v3.md) - 질문 구성의 기준 뱅크
+- **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - web3people 인터뷰 콘텐츠의 제품 맥락
+- **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - 콘텐츠 입력 및 운영 진행 상태

@@ -1,6 +1,6 @@
 # API Specs — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-03-29 00:00
+> Last Updated: 2026-05-17 16:05
 
 ## 1. 개요
 
@@ -32,17 +32,18 @@ const interviews = await payload.find({ collection: 'interviews', ... })
 await payload.find({
   collection: 'interviews',
   where: { status: { equals: 'published' } },
-  sort: '-published_at',
-  limit: 8,
-  depth: 1,  // subject(Person) 포함
+  sort: '-publishedAt',
+  limit: 9,
+  depth: 2,  // subject(Person), coverImage(Media), tags 포함
 })
 
 // 인물 목록
 await payload.find({
   collection: 'people',
   where: { status: { equals: 'published' } },
-  sort: '-created_at',
+  sort: '-createdAt',
   limit: 6,
+  depth: 1,
 })
 ```
 
@@ -54,10 +55,10 @@ await payload.find({
 await payload.find({
   collection: 'interviews',
   where: { status: { equals: 'published' } },
-  sort: '-published_at',
-  limit: 12,
+  sort: '-publishedAt',
+  limit: 24,
   page: 1,  // 페이지네이션
-  depth: 1,
+  depth: 2,
 })
 ```
 
@@ -89,8 +90,8 @@ await payload.find({
 await payload.find({
   collection: 'people',
   where: { status: { equals: 'published' } },
-  sort: '-created_at',
-  limit: 12,
+  sort: '-createdAt',
+  limit: 48,
   depth: 1,
 })
 ```
@@ -122,8 +123,8 @@ await payload.find({
       { status: { equals: 'published' } },
     ],
   },
-  sort: '-published_at',
-  depth: 1,
+  sort: '-publishedAt',
+  depth: 2,
 })
 ```
 
@@ -146,8 +147,9 @@ export async function generateStaticParams() {
 ```
 
 **재검증 전략:**
-- `revalidate: 60` (60초 ISR) — 발행 후 빠른 반영
-- 또는 Payload webhook → `revalidatePath()` (즉시 반영, v2에서 구현)
+- 프론트 페이지는 `revalidate = 60`을 사용한다.
+- `People`과 `Interviews` 컬렉션의 `afterChange` / `afterDelete` hook에서 관련 프론트 경로를 `revalidatePath()`로 재검증한다.
+- Payload hook이 CLI 시드 등 Next cache context 밖에서 실행될 수 있으므로 재검증 실패는 안전하게 무시한다.
 
 ---
 
@@ -166,11 +168,31 @@ Payload CMS가 자동 생성하는 REST 엔드포인트:
 
 **인증:** Bearer 토큰 (어드민 전용 쓰기 작업)
 
-공개 읽기는 `access: () => true` 설정으로 인증 없이 허용.
+공개 읽기 정책:
+
+- `people`, `interviews`: 비로그인 사용자는 `status = published`만 조회한다.
+- `tags`, `media`: 공개 읽기를 허용한다.
+- `comments`: 현재 승인 상태 기준 공개이나, 고도화 시 즉시 공개 정책에 맞춰 상태 모델을 재정의한다.
 
 ---
 
-## 5. 에러 처리
+## 5. 독자 참여 API (계획)
+
+회원/댓글/게시판 쓰기 API는 Payload REST API를 직접 공개하지 않고 Next.js Route Handler에서 Better Auth 세션을 검증한 뒤 처리한다.
+
+| Method | 경로 | 역할 | 상태 |
+|:---|:---|:---|:---:|
+| GET/POST | `/api/auth/[...all]` | Better Auth 핸들러 | 구현됨 |
+| POST | `/api/comments` | 세션 확인 후 댓글 작성 | 계획 |
+| PATCH | `/api/comments/[id]` | 작성자 본인 댓글 수정 | 계획 |
+| DELETE | `/api/comments/[id]` | 작성자 본인 또는 관리자 삭제 | 계획 |
+| POST | `/api/board/posts` | 세션 확인 후 게시글 작성 | 계획 |
+| PATCH | `/api/board/posts/[id]` | 작성자 본인 게시글 수정 | 계획 |
+| DELETE | `/api/board/posts/[id]` | 작성자 본인 또는 관리자 삭제 | 계획 |
+
+---
+
+## 6. 에러 처리
 
 ```typescript
 // 존재하지 않는 slug → 404
@@ -184,5 +206,6 @@ if (doc.status !== 'published') notFound()
 
 ## Related Documents
 - **Technical_Specs**: [DB Schema](./01_DB_SCHEMA.md) - 컬렉션 필드 및 관계 설계
+- **Technical_Specs**: [Reader Auth, Board, Comments Spec](./03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 참여 API 설계 기준
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 페이지별 기능 명세
 - **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - API 구현 태스크

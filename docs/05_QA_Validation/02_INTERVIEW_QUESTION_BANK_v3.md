@@ -1,4 +1,6 @@
 # W3P — 인터뷰 질문 뱅크 v3 (사전 발송용)
+> Created: 2026-05-17 16:05
+> Last Updated: 2026-05-17 16:05
 
 ## 📌 문서 개요
 본 문서는 대상자에게 인터뷰 전 사전 이메일로 발송할 **총 12개의 질문**을 도출하기 위한 질문 뱅크입니다. 
@@ -95,3 +97,9 @@ W3P 프로젝트를 진행하고 있는 [본인 이름]입니다.
 
 감사합니다.
 [본인 이름] 드림.
+
+## Related Documents
+
+- **QA_Validation**: [Interview Questions Don Sun Lim](./03_INTERVIEW_QUESTIONS_DonSunLim.md) - 질문 뱅크를 적용한 대상자별 질문지
+- **QA_Validation**: [Interview Questions Don Sun Lim v2](./04_INTERVIEW_QUESTIONS_DonSunLim_v2.md) - 질문 뱅크를 바탕으로 다듬은 후속 버전
+- **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 인터뷰 콘텐츠 제품 방향

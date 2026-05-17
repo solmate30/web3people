@@ -1,6 +1,6 @@
 # Roadmap — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-06 23:52
+> Last Updated: 2026-05-17 16:05
 
 ## 런칭 타임라인
 
@@ -8,7 +8,7 @@
 
 ---
 
-## Now — Phase 1: 기반 세팅 (2026-03-29 ~ 2026-04-01)
+## Completed — Phase 1: 기반 세팅 (2026-03-29 ~ 2026-04-01)
 
 **목표**: 개발 환경 구성 완료, 콘텐츠 스키마 확정
 
@@ -17,35 +17,35 @@
 - [x] Better-Auth 설치 및 Route Handler 구성
 - [x] Tailwind CSS v4 + shadcn/ui + 디자인 토큰 적용
 - [x] Payload Admin 패널 정상 기동 확인
-- [ ] People, Interviews, Tags, Comments, Media, Users 컬렉션 스키마 정의
+- [x] People, Interviews, Tags, Comments, Media, Users 컬렉션 스키마 정의
 - [ ] 어드민 계정 생성 (admin 1 + editor 2)
-- [ ] Vercel 프로젝트 연결 및 환경변수 설정
-- [ ] 이미지 스토리지 설정 (Vercel Blob 또는 Cloudinary)
+- [x] Vercel 프로젝트 연결 및 환경변수 설정
+- [x] 이미지 스토리지 설정 (Cloudinary)
 
 ---
 
-## Now — Phase 2: 프론트엔드 개발 (2026-04-01 ~ 2026-04-08)
+## Completed — Phase 2: 프론트엔드 개발 (2026-04-01 ~ 2026-04-08)
 
 **목표**: 독자용 페이지 완성
 
-- [ ] 디자인 시스템 폰트 로드 (Outfit + JetBrains Mono, Google Fonts)
-- [ ] 공통 컴포넌트 (Header, Footer, InterviewCard, PersonCard)
-- [ ] 홈페이지 (히어로 + 인터뷰 그리드 + 인물 미리보기)
-- [ ] 인터뷰 목록 페이지 (`/interviews`)
-- [ ] 인터뷰 상세 페이지 (`/interviews/[slug]`)
-- [ ] 인물 목록 페이지 (`/people`)
-- [ ] 인물 프로필 페이지 (`/people/[slug]`)
+- [x] 디자인 시스템 폰트 로드 (Outfit + JetBrains Mono, Google Fonts)
+- [x] 공통 컴포넌트 (Header, Footer, InterviewCard, PersonCard)
+- [x] 홈페이지 (히어로 + 인터뷰 그리드 + 인물 미리보기)
+- [x] 인터뷰 목록 페이지 (`/interviews`)
+- [x] 인터뷰 상세 페이지 (`/interviews/[slug]`)
+- [x] 인물 목록 페이지 (`/people`)
+- [x] 인물 프로필 페이지 (`/people/[slug]`)
 - [ ] 반응형 모바일 레이아웃
 
 ---
 
-## Now — Phase 3: SEO + 콘텐츠 입력 (2026-04-08 ~ 2026-04-13)
+## Current Stabilization — Phase 3: SEO + 콘텐츠 입력 (2026-04-08 ~ 2026-04-13)
 
 **목표**: 런칭 가능 상태
 
-- [ ] OG 태그 / 메타데이터 설정
+- [x] OG 태그 / 메타데이터 설정 (기본 및 상세 페이지 동적 생성)
 - [ ] JSON-LD 구조화 데이터 (Person, Article)
-- [ ] 시딩: 인물 3~5명, 인터뷰 3~5개 초기 콘텐츠 입력
+- [ ] 시딩: 인물 3~5명, 인터뷰 3~5개 초기 콘텐츠 입력 또는 운영 콘텐츠 입력 확인
 - [ ] 편집자 어드민 사용법 가이드 (간단 문서)
 - [ ] 크로스브라우저 QA
 
@@ -82,13 +82,19 @@
 **목표**: 읽기 전용 매거진에서 댓글 가능한 커뮤니티 기반으로 확장한다.
 
 1. 독자 회원가입/로그인 기반 구축
-   - Wallet, Google, Email 옵션 확정
+   - Email/password, Google, GitHub, Wallet 옵션 확정
+   - 소셜/지갑 구현 방식은 기존 사용 패턴 확인 후 적용
    - 일반 독자 계정과 Payload 어드민/편집자 계정 분리 유지
    - 비로그인 댓글 CTA 적용
 2. 댓글 기능
    - 인터뷰 상세 하단 댓글 영역
    - 로그인 사용자만 작성 가능
-   - 기본 `pending` 저장 후 Payload Admin 승인/거부
+   - 승인 없이 즉시 공개
+   - 작성자 수정/삭제, 관리자 숨김/삭제
+3. 게시판 기능
+   - 독립 게시판
+   - 인터뷰 연결 게시판
+   - 인물 연결 게시판
 
 ---
 
@@ -116,5 +122,7 @@
 ## Related Documents
 - **Concept_Design**: [Lean Canvas](./01_LEAN_CANVAS.md) - 비즈니스 목표 및 수익 모델
 - **Concept_Design**: [Product Specs](./02_PRODUCT_SPECS.md) - MVP 기능 상세
+- **Concept_Design**: [Identity & Auth Strategy](./04_IDENTITY_AUTH_STRATEGY.md) - 독자 인증과 커뮤니티 확장 전략
 - **UI_Screens**: [UI Design](../02_UI_Screens/01_UI_DESIGN.md) - 디자인 방향
+- **Technical_Specs**: [Reader Auth, Board, Comments Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 참여 기능 구현 기준
 - **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - 상세 개발 태스크
