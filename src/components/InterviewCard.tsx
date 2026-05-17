@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { Interview, Media, Person, Tag } from '@/payload-types'
+import type { Interview, Media, Tag } from '@/payload-types'
 import { cldUrl, transforms } from '@/lib/cloudinary'
 import { formatDate } from '@/lib/getPayload'
 
@@ -9,10 +9,9 @@ type Props = {
 }
 
 export function InterviewCard({ interview }: Props) {
-  const { title, slug, excerpt, coverImage, subject, tags, publishedAt } = interview
+  const { title, slug, excerpt, coverImage, tags, publishedAt } = interview
 
   const cover = coverImage as Media | null
-  const person = subject as Person | null
   const tagList = (tags as Tag[] | null) ?? []
 
   return (

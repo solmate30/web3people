@@ -1,17 +1,17 @@
 # Identity & Auth Strategy — web3people
 > Created: 2026-05-05 11:28
-> Last Updated: 2026-05-05 11:28
+> Last Updated: 2026-05-17 15:40
 
 ## 1. 전략 요약
 
 web3people의 인증은 단순한 회원가입이 아니라, 독자가 어떤 아이덴티티로 대화에 참여할지 선택하는 경험이어야 한다.
 
-핵심 방향은 **Wallet-first, Social-friendly, Email-supported**이다.
+핵심 방향은 **Better-Auth 기반, Multi-Identity, Community-ready**이다.
 
 - 매거진 읽기: 로그인 없이 공개
-- 댓글 작성: 로그인 필요
-- 대표 아이덴티티: 지갑 주소 또는 연결된 소셜 계정
-- 기본 UX: 지갑 로그인을 가장 web3people다운 선택지로 제시하되, Google/Email을 함께 제공해 참여 장벽을 낮춘다
+- 댓글/게시판 작성: 로그인 필요
+- 대표 아이덴티티: 이메일 계정, 소셜 계정, 지갑 주소 중 사용자가 선택
+- 기본 UX: 이메일/비밀번호, Google, GitHub, 지갑 로그인을 모두 제공해 진입 장벽과 web3 정체성을 함께 잡는다
 - 장기 확장: ENS, Farcaster, X/Twitter, 온체인 배지, contributor badge로 확장
 
 ---
@@ -42,11 +42,12 @@ web3people은 web3 빌더와 독자의 인터뷰 매거진이다. 따라서 댓�
 
 | 우선순위 | 옵션 | 목적 |
 |:---:|:---|:---|
-| 1 | Continue with Wallet | web3people의 대표 아이덴티티 경험 |
+| 1 | Continue with Email | 가장 예측 가능한 기본 회원가입/로그인 |
 | 2 | Continue with Google | 일반 독자 진입 장벽 최소화 |
-| 3 | Continue with Email | 백업 로그인 및 비소셜 사용자 지원 |
+| 3 | Continue with GitHub | web3 빌더/개발자 독자층과의 친화성 |
+| 4 | Continue with Wallet | web3people의 대표 아이덴티티 경험 |
 
-MVP에서는 X/Twitter, Farcaster를 즉시 필수로 넣지 않는다. 대신 사용자 프로필에 선택 입력 또는 추후 연결 영역으로 남긴다.
+MVP에서는 이메일/비밀번호, Google, GitHub, 지갑 로그인을 모두 허용한다. 소셜 로그인 구현 세부 방식은 기존에 사용해온 프로젝트 패턴이 있으므로 실제 작업 직전에 사용자에게 확인한다.
 
 ### 3.2 Next 단계
 
@@ -87,7 +88,7 @@ Connect your identity to join the conversation.
 댓글을 작성하려면 지갑 또는 소셜 계정으로 로그인해 주세요.
 ```
 
-로그인한 독자는 댓글 작성이 가능하며, 댓글은 기본 `pending` 상태로 저장된다. 편집자 또는 관리자가 승인하면 공개된다.
+로그인한 독자는 댓글 작성이 가능하며, 댓글은 별도 승인 없이 즉시 공개된다. 운영 리스크는 사전 승인보다 사후 관리, 신고, 삭제, rate limit, 계정 제재로 대응한다.
 
 ---
 
@@ -138,6 +139,7 @@ Better-Auth의 OAuth 계정 연결 구조를 사용한다.
 MVP 후보:
 
 - Google
+- GitHub
 
 Next 후보:
 
@@ -155,7 +157,7 @@ Next 후보:
 1. 댓글 rate limit
 2. 이메일 인증
 3. 지갑 또는 소셜 연결 계정 우선 노출
-4. 신규 계정 댓글 승인 강화
+4. 신규 계정 작성 제한 또는 임시 숨김 정책
 
 ---
 
@@ -170,9 +172,9 @@ Next 후보:
 | reader profile | 댓글 표시명, bio, 대표 identity, 관심 태그 |
 | connected identity | wallet, Google, X/Twitter, Farcaster 등 연결 계정 |
 | wallet address | 검증된 지갑 주소, chain, ENS/Basename 표시명 |
-| comment | author profile 또는 auth user와 연결, 기본 pending |
+| comment | author profile 또는 auth user와 연결, 즉시 공개 후 사후 관리 |
 
-MVP에서는 별도 컬렉션 없이 Better-Auth user/account와 Comments 필드를 활용할 수 있다. 다만 댓글 작성자 표시와 identity 확장을 고려하면 `reader_profiles` 컬렉션을 추가하는 방향이 더 장기적으로 안정적이다.
+MVP에서도 Better-Auth를 독자 인증의 기준으로 사용한다. 댓글 작성자 표시, 지갑/소셜 연결, 게시판 작성자 프로필을 안정적으로 다루기 위해 Payload `users`와 분리된 `readerProfiles` 성격의 독자 프로필 모델을 검토한다.
 
 ---
 
@@ -180,14 +182,15 @@ MVP에서는 별도 컬렉션 없이 Better-Auth user/account와 Comments 필드
 
 ### 8.1 Phase 1 — 댓글 가능한 인증 MVP
 
-- Wallet 로그인
+- Email/password 로그인
 - Google 로그인
-- Email 로그인
+- GitHub 로그인
+- Wallet 로그인
 - 인터뷰 상세 하단 댓글 UI
 - 비로그인 댓글 CTA
 - 로그인 후 댓글 작성
-- 댓글 기본 `pending`
-- admin에서 댓글 승인/거부
+- 댓글 즉시 공개
+- 작성자 본인 수정/삭제, 관리자 삭제
 
 ### 8.2 Phase 2 — Web3 Identity 강화
 
@@ -197,7 +200,15 @@ MVP에서는 별도 컬렉션 없이 Better-Auth user/account와 Comments 필드
 - 독자 프로필 페이지 또는 미니 프로필
 - 댓글 작성자 identity card
 
-### 8.3 Phase 3 — 온체인/커뮤니티 확장
+### 8.3 Phase 3 — 게시판 커뮤니티 확장
+
+- 독립 게시판 (`/board`)
+- 인터뷰 연결 게시판/토론
+- 인물 연결 게시판/토론
+- 게시글 댓글
+- 신고/숨김/운영자 모더레이션
+
+### 8.4 Phase 4 — 온체인/커뮤니티 확장
 
 - contributor badge
 - 인터뷰 참여/댓글 활동 기반 badge
@@ -228,7 +239,9 @@ MVP에서는 별도 컬렉션 없이 Better-Auth user/account와 Comments 필드
 - 이메일 로그인은 백업 옵션으로 유지한다
 - 서비스가 사용자의 private key를 직접 생성하거나 보관하지 않는다
 - 일반 독자 계정은 Payload `users`와 분리한다
-- 댓글은 기본 승인제(`pending`)로 운영한다
+- 댓글은 승인 없이 회원이 자유롭게 작성하고 즉시 공개한다
+- 독립 게시판, 인터뷰 연결 게시판, 인물 연결 게시판을 모두 장기 구조에 포함한다
+- 소셜 로그인 구현 방식은 실제 작업 직전에 기존 사용 패턴을 사용자에게 확인한다
 
 ---
 
@@ -238,5 +251,6 @@ MVP에서는 별도 컬렉션 없이 Better-Auth user/account와 Comments 필드
 - **Concept_Design**: [Roadmap](./03_ROADMAP.md) - 인증/댓글 기능의 단계별 구현 위치
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - Payload users와 Better-Auth 테이블 분리 기준
 - **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - 댓글 작성 API와 인증 검증 흐름 반영 대상
+- **Technical_Specs**: [Reader Auth, Board, Comments Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 인증과 커뮤니티 기능 구현 명세
 - **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - 인증/댓글 구현 태스크 관리
-- **QA_Validation**: [QA Checklist](../05_QA_Validation/01_QA_CHECKLIST.md) - 로그인, 댓글 작성, 승인 플로우 QA 기준 반영 대상
+- **QA_Validation**: [QA Checklist](../05_QA_Validation/01_QA_CHECKLIST.md) - 로그인, 댓글 작성, 게시판 QA 기준 반영 대상

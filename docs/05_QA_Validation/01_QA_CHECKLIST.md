@@ -1,6 +1,6 @@
 # QA Checklist — web3people MVP
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-03-29 00:00
+> Last Updated: 2026-05-17 15:40
 
 https://www.notion.so/W3P-v3-33bbe87727b981e2bb25cb3a9f1780b8
 
@@ -48,6 +48,38 @@ https://www.notion.so/W3P-v3-33bbe87727b981e2bb25cb3a9f1780b8
 | C-04 | 존재하지 않는 slug 접근 | 404 페이지 표시 | - |
 | C-05 | draft 상태 인터뷰 URL 직접 접근 | 404 페이지 표시 | - |
 
+### 2.4 독자 인증 — Better Auth
+
+| # | 시나리오 | 기대 결과 | 상태 |
+|:---|:---|:---|:---:|
+| D-01 | 이메일/비밀번호로 회원가입 | Better Auth 독자 세션 생성 | - |
+| D-02 | 이메일/비밀번호로 로그인/로그아웃 | 세션 생성 및 제거 정상 | - |
+| D-03 | Google 로그인 | 기존 소셜 로그인 패턴에 맞게 세션 생성 | - |
+| D-04 | GitHub 로그인 | 기존 소셜 로그인 패턴에 맞게 세션 생성 | - |
+| D-05 | 지갑 로그인 | 서명 검증 후 독자 세션 생성, 트랜잭션 없음 | - |
+| D-06 | Payload admin 계정과 독자 계정 분리 | `/admin` 권한과 독자 세션이 섞이지 않음 | - |
+
+### 2.5 댓글 — 즉시 공개 정책
+
+| # | 시나리오 | 기대 결과 | 상태 |
+|:---|:---|:---|:---:|
+| E-01 | 비로그인 사용자가 댓글 작성 시도 | 로그인 CTA 표시, 작성 API 차단 | - |
+| E-02 | 로그인 사용자가 인터뷰 댓글 작성 | 댓글이 즉시 공개됨 | - |
+| E-03 | 작성자 본인이 댓글 수정 | 수정 성공, 다른 사용자는 수정 불가 | - |
+| E-04 | 작성자 본인이 댓글 삭제 | 삭제 또는 숨김 처리 성공 | - |
+| E-05 | 관리자/편집자가 부적절 댓글 숨김 | 프론트에서 숨김 상태 반영 | - |
+| E-06 | 클라이언트가 author 정보를 조작 | 서버 세션 기준 작성자로 저장 | - |
+
+### 2.6 게시판
+
+| # | 시나리오 | 기대 결과 | 상태 |
+|:---|:---|:---|:---:|
+| F-01 | 로그인 사용자가 독립 게시글 작성 | `/board` 목록과 상세에서 표시 | - |
+| F-02 | 인터뷰 연결 게시글 작성 | 해당 인터뷰 맥락에서 조회 가능 | - |
+| F-03 | 인물 연결 게시글 작성 | 해당 인물 맥락에서 조회 가능 | - |
+| F-04 | 비로그인 사용자가 게시글 작성 시도 | 로그인 CTA 표시, 작성 API 차단 | - |
+| F-05 | 작성자 본인이 게시글 수정/삭제 | 정상 처리 | - |
+
 ---
 
 ## 3. 성능 체크리스트
@@ -84,4 +116,5 @@ https://www.notion.so/W3P-v3-33bbe87727b981e2bb25cb3a9f1780b8
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 기능 명세 기준
 - **UI_Screens**: [UI Design](../02_UI_Screens/01_UI_DESIGN.md) - 디자인 기준
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 데이터 모델 검증 기준
+- **Technical_Specs**: [Reader Auth, Board, Comments Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 인증/댓글/게시판 QA 기준
 - **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - QA 전 완료 필요 태스크

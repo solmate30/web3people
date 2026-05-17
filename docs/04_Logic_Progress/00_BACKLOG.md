@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-06 23:52
+> Last Updated: 2026-05-17 15:40
 
 ## 칸반 보드
 
@@ -42,7 +42,7 @@ _없음_
   - `/admin/create-first-user`에서 첫 admin 생성 후 `pnpm seed` 실행 또는 어드민 패널에서 직접 추가
 - [x] **[P1-05]** Vercel 프로젝트 연결 설정
   - `vercel.json` 생성 완료 (pnpm build, outputDirectory .next)
-  - Vercel 대시보드에서 환경변수 설정 필요 (DATABASE_URL, DATABASE_AUTH_TOKEN, PAYLOAD_SECRET, BLOB_READ_WRITE_TOKEN)
+  - Vercel 대시보드에서 환경변수 설정 필요 (DATABASE_URL, DATABASE_AUTH_TOKEN, PAYLOAD_SECRET, CLOUDINARY_*)
 - [x] **[P1-06]** 이미지 스토리지 설정 (Cloudinary)
   - `cloudinary` SDK 설치, `src/plugins/cloudinaryStorage.ts` 커스텀 플러그인 작성
   - `beforeChange` 훅으로 업로드 → Cloudinary URL을 `media.url`에 저장
@@ -135,28 +135,41 @@ _없음_
 - [ ] **[V2-04]** 독자 회원가입/로그인 기반 구축
   - 일정: Phase 4B 1순위
   - 의존성: Better-Auth Route Handler, 일반 독자 계정과 Payload 어드민 계정 분리 기준
-  - 완료 기준: 로그인 진입점, 세션 확인, 비로그인 댓글 CTA까지 확인
-  - [ ] 로그인 옵션 확정: Wallet, Google, Email
+  - 완료 기준: 이메일/비밀번호, Google, GitHub, 지갑 로그인 진입점과 세션 확인, 비로그인 작성 CTA까지 확인
+  - [x] 로그인 옵션 확정: Email/password, Google, GitHub, Wallet
+  - [ ] 기존 프로젝트에서 사용해온 Google/GitHub 소셜 로그인 구현 방식 확인
+  - [ ] 기존 프로젝트에서 사용해온 지갑 로그인 구현 방식 확인
   - [ ] 댓글 작성 전 로그인 CTA 문구 적용
   - [ ] 일반 독자 계정과 Payload 어드민/편집자 계정 분리 유지
-  - [ ] 독자 프로필 또는 Better-Auth user/account 직접 사용 여부 결정
+  - [ ] 독자 프로필 컬렉션 도입 시점 결정
 - [ ] **[V2-05]** 댓글 기능
   - 일정: Phase 4B 2순위, 회원가입/로그인 기반 이후
   - 의존성: V2-04 세션 확인, `Comments` 컬렉션 운영 플로우
-  - 완료 기준: 로그인 사용자 댓글 작성, `pending` 저장, 어드민 승인/거부 확인
+  - 완료 기준: 로그인 사용자 댓글 작성, 즉시 공개, 작성자 수정/삭제, 관리자 숨김/삭제 확인
   - [ ] 인터뷰 상세 페이지 하단 댓글 영역 추가
   - [ ] 로그인 사용자만 댓글 작성 가능
-  - [ ] 댓글 기본 상태 `pending` 저장
-  - [ ] Payload Admin에서 댓글 승인/거부 운영 플로우 확인
-  - [ ] 스팸 대응 기준 정의: rate limit, 이메일 인증 강화, 승인 정책
+  - [ ] 댓글 기본 상태를 즉시 공개 정책에 맞게 재정의
+  - [ ] 작성자 본인 수정/삭제 플로우 구현
+  - [ ] 관리자 숨김/삭제 운영 플로우 확인
+  - [ ] 스팸 대응 기준 정의: rate limit, 신고, 이메일 인증 강화, 계정 제한
+
+- [ ] **[V2-06]** 게시판 기능
+  - 일정: Phase 4B 3순위, 댓글 MVP 이후
+  - 의존성: V2-04 세션 확인, 독자 작성자 모델
+  - 완료 기준: 독립 게시판, 인터뷰 연결 게시글, 인물 연결 게시글 작성/조회 확인
+  - [ ] `boardPosts` 컬렉션 설계
+  - [ ] `/board` 목록/상세/작성 화면
+  - [ ] 인터뷰 연결 게시글 지원
+  - [ ] 인물 연결 게시글 지원
+  - [ ] 게시글 댓글 연결 방식 확정
 
 ---
 
 ### Todo — Phase 4C: 성장/운영 보강 (목표: 2026-05-18 ~)
 
-- [ ] **[V2-06]** 뉴스레터 구독 (이메일 수집 + 발송)
-- [ ] **[V2-07]** Payload webhook → revalidatePath (즉시 캐시 갱신)
-- [ ] **[V2-08]** 소셜 공유 버튼 최적화
+- [ ] **[V2-07]** 뉴스레터 구독 (이메일 수집 + 발송)
+- [ ] **[V2-08]** Payload webhook → revalidatePath (즉시 캐시 갱신)
+- [ ] **[V2-09]** 소셜 공유 버튼 최적화
 
 ---
 
@@ -179,3 +192,4 @@ _없음_
 - **Concept_Design**: [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md) - 댓글/회원가입/아이덴티티 전략
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 스키마 구현 참조
 - **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - API 구현 참조
+- **Technical_Specs**: [Reader Auth, Board, Comments Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 인증/게시판/댓글 구현 기준
