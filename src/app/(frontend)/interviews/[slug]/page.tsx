@@ -9,7 +9,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { InterviewCard } from '@/components/InterviewCard'
 import { LexicalContent } from '@/components/LexicalContent'
-import { CommentLoginCTA } from '@/components/auth/CommentLoginCTA'
+import { CommentSection } from '@/components/comments/CommentSection'
 import {
   findPublishedInterviewBySlug,
   findPublishedInterviewSlugs,
@@ -283,7 +283,7 @@ export default async function InterviewDetailPage({
 
         <section className="border-t border-[var(--color-void-border)]">
           <div className="mx-auto max-w-[1200px] px-8 py-14 lg:px-16">
-            <CommentLoginCTA callbackURL={`/interviews/${interview.slug}`} />
+            <CommentSection interviewId={interview.id} callbackURL={`/interviews/${interview.slug}`} />
           </div>
         </section>
 

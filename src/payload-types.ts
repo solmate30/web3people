@@ -304,7 +304,7 @@ export interface Comment {
    */
   authorEmail: string;
   content: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'visible' | 'hidden' | 'removed';
   updatedAt: string;
   createdAt: string;
 }

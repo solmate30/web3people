@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 18:53
+> Last Updated: 2026-05-17 20:38
 
 ## 1. 개요
 
@@ -124,16 +124,16 @@ Payload CMS 기본 Users 컬렉션 사용. 어드민/편집자 전용.
 
 ### 2.6 `comments` — 댓글
 
-현재 컬렉션은 구현되어 있으나, 고도화 정책에 맞춰 상태 모델 재정의가 필요하다.
+인터뷰 상세의 독자 댓글을 저장한다. 독자 인증은 Better Auth가 담당하고, Payload `comments` 컬렉션에는 서버에서 검증한 작성자 정보만 저장한다.
 
 | 필드 | 타입 | 필수 | 설명 |
 |:---|:---|:---:|:---|
 | id | uuid | Y | PK |
 | interview | relationship | Y | 댓글 대상 인터뷰 |
 | authorName | text | Y | 작성자 표시명 |
-| authorEmail | email | Y | Better Auth 유저 이메일, 공개하지 않음 |
+| authorEmail | email | Y | Better Auth 유저 이메일, 본인 수정/삭제 판정에 사용하며 공개하지 않음 |
 | content | textarea | Y | 댓글 내용 |
-| status | select | Y | 현재 pending / approved / rejected, 향후 visible / hidden / removed 검토 |
+| status | select | Y | `visible` / `hidden` / `removed` |
 | createdAt | timestamp | Y | Payload 자동 |
 | updatedAt | timestamp | Y | Payload 자동 |
 
@@ -142,7 +142,10 @@ Payload CMS 기본 Users 컬렉션 사용. 어드민/편집자 전용.
 - 댓글은 로그인 독자만 작성한다.
 - 승인 없이 즉시 공개한다.
 - 작성자 정보는 클라이언트 입력이 아니라 Better Auth 세션에서 결정한다.
-- Payload REST 직접 생성은 막고 서버 Route Handler에서 검증 후 생성한다.
+- 운영 DB 컬럼 추가를 피하기 위해 댓글 MVP의 본인 판정은 기존 `authorEmail`을 사용한다.
+- Payload REST 직접 생성은 막고 `/api/reader/comments` Route Handler에서 검증 후 생성한다.
+- 작성자 본인은 Route Handler에서 본인 댓글을 수정하거나 삭제 처리할 수 있다.
+- 관리자는 Payload Admin에서 숨김 또는 삭제 상태로 운영 조치한다.
 
 ---
 

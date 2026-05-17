@@ -1,6 +1,6 @@
 # API Specs — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 19:08
+> Last Updated: 2026-05-17 20:38
 
 ## 1. 개요
 
@@ -250,7 +250,7 @@ Payload CMS가 자동 생성하는 REST 엔드포인트:
 
 - `people`, `interviews`: 비로그인 사용자는 `status = published`만 조회한다.
 - `tags`, `media`: 공개 읽기를 허용한다.
-- `comments`: 현재 승인 상태 기준 공개이나, 고도화 시 즉시 공개 정책에 맞춰 상태 모델을 재정의한다.
+- `comments`: 공개 조회는 `visible` 상태만 반환한다. 독자 쓰기 API는 Payload REST와 분리된 `/api/reader/comments` namespace를 사용한다.
 
 ---
 
@@ -262,9 +262,10 @@ Payload CMS가 자동 생성하는 REST 엔드포인트:
 |:---|:---|:---|:---:|
 | GET/POST | `/auth/[...all]` | Better Auth 핸들러. OAuth callback은 `/auth/callback/{provider}` 사용 | 구현됨 |
 | GET | `/login` | 독자 로그인/회원가입 진입점 | 구현됨 |
-| POST | `/api/comments` | 세션 확인 후 댓글 작성 | 계획 |
-| PATCH | `/api/comments/[id]` | 작성자 본인 댓글 수정 | 계획 |
-| DELETE | `/api/comments/[id]` | 작성자 본인 또는 관리자 삭제 | 계획 |
+| GET | `/api/reader/comments?interviewId={id}` | 인터뷰 공개 댓글 조회 | 구현됨 |
+| POST | `/api/reader/comments` | 세션 확인 후 댓글 작성 | 구현됨 |
+| PATCH | `/api/reader/comments/[id]` | 작성자 본인 댓글 수정 | 구현됨 |
+| DELETE | `/api/reader/comments/[id]` | 작성자 본인 댓글 삭제 처리 | 구현됨 |
 | POST | `/api/board/posts` | 세션 확인 후 게시글 작성 | 계획 |
 | PATCH | `/api/board/posts/[id]` | 작성자 본인 게시글 수정 | 계획 |
 | DELETE | `/api/board/posts/[id]` | 작성자 본인 또는 관리자 삭제 | 계획 |

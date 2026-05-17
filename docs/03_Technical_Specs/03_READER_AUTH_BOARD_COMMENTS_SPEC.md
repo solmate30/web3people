@@ -1,6 +1,6 @@
 # Reader Auth, Board, Comments Spec — web3people
 > Created: 2026-05-17 15:35
-> Last Updated: 2026-05-17 20:19
+> Last Updated: 2026-05-17 20:38
 
 ## 1. 목적
 
@@ -59,7 +59,9 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 - 관리자/편집자는 숨김 또는 삭제 가능
 - 스팸 대응은 rate limit, 신고, 계정 제한, 관리자 삭제로 처리
 
-현재 `Comments` 컬렉션은 `status: pending | approved | rejected` 구조를 갖고 있다. 즉시 공개 정책에 맞추려면 기본 상태를 `visible` 또는 `published` 성격으로 재정의하거나, `status`를 `visible | hidden | removed` 같은 운영 상태로 바꾸는 편이 명확하다.
+현재 `Comments` 컬렉션은 즉시 공개 정책에 맞춰 `status: visible | hidden | removed` 구조를 사용한다. 새 댓글은 Route Handler에서 세션 검증 후 `visible`로 생성되며, 공개 조회는 `visible`만 반환한다. 관리자는 Payload Admin에서 `hidden` 또는 `removed`로 운영 조치할 수 있다.
+
+댓글 MVP는 운영 DB 컬럼 추가 없이 기존 `authorEmail`을 세션 기준으로 저장하고 본인 수정/삭제 판정에 사용한다. `readerProfiles` 또는 별도 author id 컬럼은 댓글 MVP 이후 표시명/활동 요구가 확정되면 도입한다.
 
 ### 3.2 게시판
 
@@ -100,9 +102,10 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 
 | Method | 경로 | 역할 |
 |:---|:---|:---|
-| POST | `/api/comments` | 세션 확인 후 댓글 생성 |
-| PATCH | `/api/comments/[id]` | 작성자 본인 댓글 수정 |
-| DELETE | `/api/comments/[id]` | 작성자 본인 삭제 또는 관리자 삭제 |
+| GET | `/api/reader/comments?interviewId={id}` | 공개 댓글 조회. Payload REST `/api/comments` 충돌 방지를 위해 reader namespace 사용 |
+| POST | `/api/reader/comments` | 세션 확인 후 댓글 생성 |
+| PATCH | `/api/reader/comments/[id]` | 작성자 본인 댓글 수정 |
+| DELETE | `/api/reader/comments/[id]` | 작성자 본인 삭제 |
 | POST | `/api/board/posts` | 세션 확인 후 게시글 생성 |
 | PATCH | `/api/board/posts/[id]` | 작성자 본인 게시글 수정 |
 | DELETE | `/api/board/posts/[id]` | 작성자 본인 삭제 또는 관리자 삭제 |
@@ -110,6 +113,8 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 Route Handler 내부에서 Better Auth 세션을 확인하고, 서버에서 확정한 작성자 정보만 Payload에 저장한다.
 
 Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better Auth reader라는 점을 혼동하지 않는다. 독자 쓰기 API는 별도 서버 Route Handler에서 검증하고, 필요한 경우 의도적으로 admin-level Local API를 사용하되 입력값을 서버에서 제한한다.
+
+`/api/comments`는 Payload 컬렉션 REST endpoint와 경로가 겹친다. Payload Admin의 댓글 운영 화면을 유지하기 위해 독자용 API는 `/api/reader/comments` namespace를 사용한다.
 
 ## 5. 구현 순서
 
@@ -127,7 +132,7 @@ Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better A
 
 3. 댓글 MVP
    - Comments 모델을 즉시 공개 정책에 맞게 정리
-   - `/api/comments` 작성 API
+   - `/api/reader/comments` 작성 API
    - 인터뷰 상세 댓글 UI
    - 수정/삭제/신고 또는 숨김 정책
 

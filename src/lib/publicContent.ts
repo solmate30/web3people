@@ -1,5 +1,5 @@
 import type { Payload } from 'payload'
-import type { Interview, Person, Tag } from '@/payload-types'
+import type { Comment, Interview, Person, Tag } from '@/payload-types'
 
 type FindOptions = {
   depth?: number
@@ -40,6 +40,8 @@ export type PersonSearchResult = {
 }
 
 export type SearchContentResult = InterviewSearchResult | PersonSearchResult
+
+export type PublicComment = Pick<Comment, 'id' | 'authorName' | 'content' | 'createdAt' | 'updatedAt'>
 
 export function findPublishedInterviews(payload: Payload, options: FindOptions = {}) {
   return payload.find({
@@ -258,6 +260,34 @@ export function findPublishedInterviewsByTagId(
     sort: options.sort ?? '-publishedAt',
     limit: options.limit ?? 24,
     depth: options.depth ?? 1,
+    overrideAccess: false,
+  })
+}
+
+export function findVisibleCommentsByInterviewId(
+  payload: Payload,
+  interviewId: string | number,
+  options: FindOptions = {},
+) {
+  return payload.find({
+    collection: 'comments',
+    where: {
+      and: [
+        { interview: { equals: interviewId } },
+        { status: { equals: 'visible' } },
+      ],
+    },
+    sort: options.sort ?? '-createdAt',
+    limit: options.limit ?? 100,
+    depth: options.depth ?? 0,
+    select: {
+      id: true,
+      authorName: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+      authorEmail: true,
+    },
     overrideAccess: false,
   })
 }

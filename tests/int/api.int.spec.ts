@@ -29,7 +29,7 @@ describe('API', () => {
           authorName: 'Anonymous',
           authorEmail: 'anonymous@example.com',
           content: 'Blocked anonymous comment',
-          status: 'approved',
+          status: 'visible',
         },
         draft: false,
         overrideAccess: false,
