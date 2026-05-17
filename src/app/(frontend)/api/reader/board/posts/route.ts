@@ -116,7 +116,7 @@ export async function POST(request: Request) {
   )
 }
 
-export function toBoardPostResponse(
+function toBoardPostResponse(
   post: BoardPost,
   currentUserEmail?: string,
 ): BoardPostResponse {

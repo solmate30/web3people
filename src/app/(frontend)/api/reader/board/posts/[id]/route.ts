@@ -2,11 +2,22 @@ import { NextResponse } from 'next/server'
 import { getPayload } from '@/lib/getPayload'
 import { auth } from '@/lib/auth'
 import { isTrustedRequestOrigin } from '@/lib/requestOrigin'
-import type { BoardPost } from '@/payload-types'
-import { toBoardPostResponse } from '../route'
+import type { BoardPost, Interview, Person } from '@/payload-types'
 
 const MAX_TITLE_LENGTH = 160
 const MAX_CONTENT_LENGTH = 8000
+
+type BoardPostResponse = {
+  id: number
+  title: string
+  content: string
+  authorName: string
+  createdAt: string
+  updatedAt: string
+  canManage: boolean
+  relatedInterview: { id: number; title: string; slug: string } | null
+  relatedPerson: { id: number; name: string; slug: string } | null
+}
 
 export async function GET(
   request: Request,
@@ -158,6 +169,43 @@ function parseText(value: unknown, maxLength: number): string | null {
   if (!text || text.length > maxLength) return null
 
   return text
+}
+
+function toBoardPostResponse(
+  post: BoardPost,
+  currentUserEmail?: string,
+): BoardPostResponse {
+  return {
+    id: post.id,
+    title: post.title,
+    content: post.content,
+    authorName: post.authorName,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+    canManage: Boolean(currentUserEmail && post.authorEmail === currentUserEmail),
+    relatedInterview: normalizeInterview(post.relatedInterview),
+    relatedPerson: normalizePerson(post.relatedPerson),
+  }
+}
+
+function normalizeInterview(value: number | Interview | null | undefined) {
+  if (!value || typeof value !== 'object') return null
+
+  return {
+    id: value.id,
+    title: value.title,
+    slug: value.slug,
+  }
+}
+
+function normalizePerson(value: number | Person | null | undefined) {
+  if (!value || typeof value !== 'object') return null
+
+  return {
+    id: value.id,
+    name: value.name,
+    slug: value.slug,
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
