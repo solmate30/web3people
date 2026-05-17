@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 15:40
+> Last Updated: 2026-05-17 16:11
 
 ## 칸반 보드
 
@@ -107,6 +107,17 @@ _없음_
 
 ### Todo — Phase 4A: 탐색 개선 (목표: 2026-05-07 ~ 2026-05-10)
 
+- [ ] **[V2-00]** 코드 리뷰 기반 안전장치 정리
+  - 일정: Phase 4A/4B 공통 선행 작업
+  - 의존성: [Code Review Report](./02_CODE_REVIEW.md)
+  - 완료 기준: 운영 env 검증, Payload access helper, 댓글 access 재설계, 공개 조회 helper 기준 확정
+  - [x] 1차 코드 리뷰 리포트 작성
+  - [ ] `00_DEVELOPMENT_PRINCIPLES.md` 신설
+  - [ ] 운영 필수 env fail-fast 검증 추가
+  - [ ] Payload `push: true` 운영 분리
+  - [ ] `src/access/` RBAC helper 정리
+  - [ ] 공개 콘텐츠 조회 helper 작성
+  - [ ] `/my-route` 예제 API 제거
 - [ ] **[V2-01]** 검색 기반 콘텐츠 탐색
   - 일정: Phase 4A 1순위
   - 의존성: `Interviews`, `People`, `Tags` 공개 데이터 조회 안정화
@@ -193,3 +204,4 @@ _없음_
 - **Technical_Specs**: [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md) - 스키마 구현 참조
 - **Technical_Specs**: [API Specs](../03_Technical_Specs/02_API_SPECS.md) - API 구현 참조
 - **Technical_Specs**: [Reader Auth, Board, Comments Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 인증/게시판/댓글 구현 기준
+- **Logic_Progress**: [Code Review Report](./02_CODE_REVIEW.md) - 기능 고도화 전 코드 리스크와 선행 정리 항목
