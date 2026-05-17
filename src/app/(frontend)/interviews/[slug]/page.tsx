@@ -8,19 +8,18 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { InterviewCard } from '@/components/InterviewCard'
 import { LexicalContent } from '@/components/LexicalContent'
+import {
+  findPublishedInterviewBySlug,
+  findPublishedInterviewSlugs,
+  findRelatedPublishedInterviews,
+} from '@/lib/publicContent'
 import type { Interview, Media, Person, Tag } from '@/payload-types'
 
 export const revalidate = 60
 
 export async function generateStaticParams() {
   const payload = await getPayload()
-  const { docs } = await payload.find({
-    collection: 'interviews',
-    where: { status: { equals: 'published' } },
-    select: { slug: true },
-    limit: 1000,
-    depth: 0,
-  })
+  const { docs } = await findPublishedInterviewSlugs(payload)
   return docs.map((doc) => ({ slug: doc.slug }))
 }
 
@@ -31,11 +30,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload()
-  const { docs } = await payload.find({
-    collection: 'interviews',
-    where: { and: [{ slug: { equals: slug } }, { status: { equals: 'published' } }] },
+  const { docs } = await findPublishedInterviewBySlug(payload, slug, {
     depth: 1,
-    limit: 1,
   })
   const interview = docs[0]
   if (!interview) return {}
@@ -61,11 +57,8 @@ export default async function InterviewDetailPage({
   const { slug } = await params
   const payload = await getPayload()
 
-  const { docs } = await payload.find({
-    collection: 'interviews',
-    where: { and: [{ slug: { equals: slug } }, { status: { equals: 'published' } }] },
+  const { docs } = await findPublishedInterviewBySlug(payload, slug, {
     depth: 2,
-    limit: 1,
   })
 
   const interview = docs[0]
@@ -77,15 +70,7 @@ export default async function InterviewDetailPage({
   const tags = (interview.tags as Tag[] | null) ?? []
 
   // 추천 인터뷰
-  const { docs: related } = await payload.find({
-    collection: 'interviews',
-    where: {
-      and: [
-        { status: { equals: 'published' } },
-        { slug: { not_equals: slug } },
-      ],
-    },
-    sort: '-publishedAt',
+  const { docs: related } = await findRelatedPublishedInterviews(payload, slug, {
     limit: 3,
     depth: 2,
   })

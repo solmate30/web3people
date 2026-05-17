@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { adminOrSelf, isAdminField } from '@/access/admin'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -7,6 +8,11 @@ export const Users: CollectionConfig = {
     group: '설정',
   },
   auth: true,
+  access: {
+    read: adminOrSelf,
+    update: adminOrSelf,
+    delete: ({ req }) => req.user?.role === 'admin',
+  },
   fields: [
     {
       name: 'name',
@@ -24,8 +30,9 @@ export const Users: CollectionConfig = {
         { label: '관리자', value: 'admin' },
         { label: '편집자', value: 'editor' },
       ],
+      saveToJWT: true,
       access: {
-        update: ({ req }) => req.user?.role === 'admin',
+        update: isAdminField,
       },
     },
   ],

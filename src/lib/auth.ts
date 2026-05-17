@@ -1,16 +1,22 @@
 import { betterAuth } from 'better-auth'
+import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createClient } from '@libsql/client'
+import { drizzle } from 'drizzle-orm/libsql'
+import { env } from './env'
 
 const turso = createClient({
-  url: process.env.DATABASE_URL!,
-  authToken: process.env.DATABASE_AUTH_TOKEN,
+  url: env.databaseUrl,
+  authToken: env.databaseAuthToken,
 })
 
+const db = drizzle(turso)
+
 export const auth = betterAuth({
-  database: {
-    dialect: 'turso',
-    db: turso,
-  },
+  secret: env.betterAuthSecret,
+  baseURL: env.appUrl,
+  database: drizzleAdapter(db, {
+    provider: 'sqlite',
+  }),
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
@@ -20,7 +26,7 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24,      // refresh every 24h
   },
   trustedOrigins: [
-    process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+    env.appUrl,
   ],
 })
 

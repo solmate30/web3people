@@ -7,19 +7,18 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { InterviewCard } from '@/components/InterviewCard'
 import { LexicalContent } from '@/components/LexicalContent'
+import {
+  findPublishedInterviewsByPersonId,
+  findPublishedPersonBySlug,
+  findPublishedPersonSlugs,
+} from '@/lib/publicContent'
 import type { Interview, Media, Tag } from '@/payload-types'
 
 export const revalidate = 60
 
 export async function generateStaticParams() {
   const payload = await getPayload()
-  const { docs } = await payload.find({
-    collection: 'people',
-    where: { status: { equals: 'published' } },
-    select: { slug: true },
-    limit: 1000,
-    depth: 0,
-  })
+  const { docs } = await findPublishedPersonSlugs(payload)
   return docs.map((doc) => ({ slug: doc.slug }))
 }
 
@@ -30,11 +29,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   const payload = await getPayload()
-  const { docs } = await payload.find({
-    collection: 'people',
-    where: { and: [{ slug: { equals: slug } }, { status: { equals: 'published' } }] },
+  const { docs } = await findPublishedPersonBySlug(payload, slug, {
     depth: 1,
-    limit: 1,
   })
   const person = docs[0]
   if (!person) return {}
@@ -57,11 +53,8 @@ export default async function PersonProfilePage({
   const { slug } = await params
   const payload = await getPayload()
 
-  const { docs } = await payload.find({
-    collection: 'people',
-    where: { and: [{ slug: { equals: slug } }, { status: { equals: 'published' } }] },
+  const { docs } = await findPublishedPersonBySlug(payload, slug, {
     depth: 1,
-    limit: 1,
   })
 
   const person = docs[0]
@@ -71,15 +64,7 @@ export default async function PersonProfilePage({
   const tags = (person.tags as Tag[] | null) ?? []
 
   // 이 인물의 인터뷰 목록
-  const { docs: interviews } = await payload.find({
-    collection: 'interviews',
-    where: {
-      and: [
-        { 'subject.slug': { equals: slug } },
-        { status: { equals: 'published' } },
-      ],
-    },
-    sort: '-publishedAt',
+  const { docs: interviews } = await findPublishedInterviewsByPersonId(payload, person.id, {
     depth: 2,
   })
 

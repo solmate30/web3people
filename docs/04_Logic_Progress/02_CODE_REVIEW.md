@@ -1,6 +1,6 @@
 # Code Review Report
 > Created: 2026-05-17 16:11
-> Last Updated: 2026-05-17 16:11
+> Last Updated: 2026-05-17 16:41
 
 ## 1. Review Scope
 
@@ -43,6 +43,7 @@ pnpm build
 - Severity: High
 - Area: Security / Community
 - Evidence: `src/collections/Comments.ts:18-22`
+- Status: Mitigated in `src/collections/Comments.ts` and `tests/int/api.int.spec.ts`
 
 현재 `comments` 컬렉션은 `create: () => true`로 되어 있다. Payload REST API가 노출되어 있으므로, 별도 Route Handler를 만들지 않아도 외부에서 댓글 생성을 시도할 수 있다. 주석은 "API 경유"를 가정하지만 access rule 자체는 그 가정을 강제하지 않는다.
 
@@ -59,6 +60,7 @@ pnpm build
 - Severity: High
 - Area: Security / Admin RBAC
 - Evidence: `src/collections/Comments.ts:20-22`
+- Status: Mitigated in `src/collections/Comments.ts`
 
 현재 `update`와 `delete`는 `!!req.user`만 확인한다. Payload admin의 `editor`도 모든 댓글을 수정/삭제할 수 있다. 서비스가 커질 경우 댓글 운영 권한은 admin/moderator/editor를 분리해야 한다.
 
@@ -74,6 +76,7 @@ pnpm build
 - Severity: High
 - Area: Deployment / Secrets
 - Evidence: `src/payload.config.ts:28-37`
+- Status: Mitigated in `src/lib/env.ts`, `src/payload.config.ts`, and `src/lib/auth.ts`
 
 `PAYLOAD_SECRET`과 `DATABASE_URL`이 없을 때 빈 문자열로 폴백한다. 운영 배포에서 env 누락을 즉시 실패시키지 못하므로, 잘못된 배포가 뒤늦게 런타임 장애로 나타날 수 있다.
 
@@ -88,8 +91,9 @@ pnpm build
 - Severity: High
 - Area: Database / Deployment
 - Evidence: `src/payload.config.ts:32-38`
+- Status: Mitigated in `src/lib/env.ts` and `src/payload.config.ts`
 
-현재 DB adapter가 `push: true`로 설정되어 있다. 초기 MVP에는 편하지만, 서비스 중인 DB에서는 의도치 않은 스키마 변경이 운영 데이터에 바로 반영될 수 있다.
+기존 DB adapter는 `push: true`로 설정되어 있었다. 초기 MVP에는 편하지만, 서비스 중인 DB에서는 의도치 않은 스키마 변경이 운영 데이터에 바로 반영될 수 있다. 2026-05-17 안정화 작업에서 기본값을 off로 바꾸고, 로컬에서 의도적으로 필요할 때만 `PAYLOAD_DB_PUSH=true`로 켜도록 변경했다.
 
 권장 방향:
 
@@ -102,8 +106,11 @@ pnpm build
 - Severity: Medium
 - Area: Auth / Reader Login
 - Evidence: `src/lib/auth.ts:14-24`
+- Status: Partially mitigated in `src/lib/auth.ts` and `src/lib/env.ts`
 
 현재 이메일/비밀번호 로그인은 켜져 있지만 `requireEmailVerification: false`다. 또한 Google/GitHub/Wallet 로그인 정책은 아직 코드에 없다.
+
+2026-05-17 안정화 작업에서 `secret`, `baseURL`, Drizzle adapter 기반 Turso 연결은 명시화했다. 소셜 로그인과 지갑 로그인 provider 정책은 다음 구현 단계에서 확정한다.
 
 회원 기능을 붙이기 전 결정할 사항:
 
@@ -118,6 +125,7 @@ pnpm build
 - Severity: Medium
 - Area: Admin RBAC
 - Evidence: `src/collections/Users.ts:17-29`
+- Status: Partially mitigated in `src/access/admin.ts` and `src/collections/Users.ts`
 
 현재 `role` 필드 update access만 존재하고, 컬렉션 단위의 read/create/update/delete 정책이 명시되어 있지 않다. 앞으로 독자/관리자 역할이 늘어나면 권한 의도가 코드에서 드러나지 않아 회귀 위험이 커진다.
 
@@ -133,6 +141,7 @@ pnpm build
 - Severity: Medium
 - Area: Payload Security
 - Evidence: `src/app/(frontend)/interviews/page.tsx:18-24`, `src/app/(frontend)/people/page.tsx:18-24`, `src/app/(frontend)/interviews/[slug]/page.tsx:64-91`
+- Status: Mitigated for public frontend reads in `src/lib/publicContent.ts`
 
 프론트 서버 컴포넌트의 Payload Local API 조회는 `where: { status: published }`를 직접 넣어 공개 범위를 제한하고 있다. 현재는 안전하게 보이지만 Payload Local API는 기본적으로 access control을 우회하므로, 향후 쿼리가 추가될 때 초안 노출 회귀가 생기기 쉽다.
 
@@ -162,6 +171,7 @@ pnpm build
 - Severity: Medium
 - Area: Data Query / Performance
 - Evidence: `src/app/(frontend)/people/[slug]/page.tsx:73-84`
+- Status: Mitigated in `src/lib/publicContent.ts` and `src/app/(frontend)/people/[slug]/page.tsx`
 
 인물 상세에서 인터뷰를 찾을 때 `{ 'subject.slug': { equals: slug } }`로 관계 하위 필드를 조회한다. 데이터가 커질수록 관계 ID 기반 조회가 더 예측 가능하다.
 
@@ -190,6 +200,7 @@ pnpm build
 - Severity: Low
 - Area: Surface Area
 - Evidence: `src/app/my-route/route.ts:1-4`
+- Status: Resolved
 
 `/my-route` 예제 API가 남아 있다. 보안 취약점은 아니지만, 운영 서비스의 API 표면은 작을수록 좋다.
 
@@ -233,8 +244,8 @@ pnpm build
 |---|---|---|
 | `pnpm lint` | PASS | ESLint 통과 |
 | `pnpm exec tsc --noEmit` | PASS | TypeScript 통과 |
-| `pnpm test:int` | PASS | 샌드박스 네트워크에서는 Turso DNS 실패, 네트워크 권한 재실행으로 통과 |
-| `pnpm build` | INCONCLUSIVE | `Creating an optimized production build ...` 이후 장시간 추가 출력 없음. 샌드박스에서 프로세스 조회/종료 제한으로 완료 확인 불가 |
+| `pnpm test:int` | PASS | 비회원 댓글 생성 차단 테스트 포함. 샌드박스 네트워크에서는 Turso DNS 실패, 네트워크 권한 재실행으로 통과 |
+| `pnpm build` | PASS | `.env` 기준 production build 통과. Better Auth base URL/secret 및 Drizzle adapter 설정 후 확인 |
 
 ## 5. Recommended Work Plan
 

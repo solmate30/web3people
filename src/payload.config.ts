@@ -5,6 +5,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { env } from './lib/env'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -25,16 +26,16 @@ export default buildConfig({
   },
   collections: [People, Interviews, Tags, Comments, Media, Users],
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: env.payloadSecret,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URL || '',
-      authToken: process.env.DATABASE_AUTH_TOKEN,
+      url: env.databaseUrl,
+      authToken: env.databaseAuthToken,
     },
-    push: true,
+    push: env.allowDatabasePush,
   }),
   sharp,
   plugins: [

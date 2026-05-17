@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:05
+> Last Updated: 2026-05-17 16:41
 
 ## 1. 개요
 
@@ -206,10 +206,12 @@ DATABASE_AUTH_TOKEN=...               # turso db tokens create web3people
 
 # Payload CMS
 PAYLOAD_SECRET=...                    # JWT 서명 키 (32자 이상 랜덤)
+PAYLOAD_DB_PUSH=false                 # 기본 off. 로컬에서 의도적으로 스키마 push가 필요할 때만 true
 
 # Better-Auth (일반 유저 인증, 동일 Turso DB 사용)
-BETTER_AUTH_SECRET=...                # 인증 서명 키
-NEXT_PUBLIC_APP_URL=http://localhost:3000  # 개발: localhost, 배포: 프로덕션 도메인
+BETTER_AUTH_SECRET=...                # 인증 서명 키 (운영 필수)
+BETTER_AUTH_URL=http://localhost:3000 # 서버 auth base URL. 배포: 프로덕션 도메인
+NEXT_PUBLIC_APP_URL=http://localhost:3000  # 클라이언트 auth base URL. 배포: 프로덕션 도메인
 
 # Cloudinary 이미지 스토리지
 CLOUDINARY_CLOUD_NAME=...

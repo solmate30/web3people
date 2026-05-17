@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { isAdmin } from '@/access/admin'
 
 // Better-Auth가 독자 인증을 담당하므로,
 // 댓글 작성자 정보는 Better-Auth 세션에서 전달받아 텍스트로 저장합니다.
@@ -15,11 +16,12 @@ export const Comments: CollectionConfig = {
       if (req.user) return true
       return { status: { equals: 'approved' } }
     },
-    // 생성은 API 경유 (Better-Auth 토큰 검증은 Route Handler에서 처리)
-    create: () => true,
+    // 독자 댓글은 Better Auth 기반 Route Handler에서 세션 검증 후 생성합니다.
+    // Payload REST API를 통한 공개 생성은 차단합니다.
+    create: isAdmin,
     // 수정/삭제는 관리자만
-    update: ({ req }) => !!req.user,
-    delete: ({ req }) => !!req.user,
+    update: isAdmin,
+    delete: isAdmin,
   },
   fields: [
     {
@@ -57,7 +59,7 @@ export const Comments: CollectionConfig = {
       name: 'status',
       type: 'select',
       required: true,
-      defaultValue: 'pending',
+      defaultValue: 'approved',
       label: '승인 상태',
       options: [
         { label: '검토 중', value: 'pending' },

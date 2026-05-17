@@ -38,6 +38,9 @@ importers:
       dotenv:
         specifier: 16.4.7
         version: 16.4.7
+      drizzle-orm:
+        specifier: 0.45.2
+        version: 0.45.2(@libsql/client@0.17.2)(@opentelemetry/api@1.9.1)(kysely@0.28.14)
       graphql:
         specifier: ^16.8.1
         version: 16.13.2
@@ -7133,7 +7136,6 @@ snapshots:
       '@libsql/client': 0.17.2
       '@opentelemetry/api': 1.9.1
       kysely: 0.28.14
-    optional: true
 
   dunder-proto@1.0.1:
     dependencies:

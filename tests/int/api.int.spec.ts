@@ -17,4 +17,21 @@ describe('API', () => {
     })
     expect(users).toBeDefined()
   })
+
+  it('blocks anonymous comment creation when access control is enforced', async () => {
+    await expect(
+      payload.create({
+        collection: 'comments',
+        data: {
+          interview: 1,
+          authorName: 'Anonymous',
+          authorEmail: 'anonymous@example.com',
+          content: 'Blocked anonymous comment',
+          status: 'approved',
+        },
+        draft: false,
+        overrideAccess: false,
+      }),
+    ).rejects.toThrow()
+  })
 })

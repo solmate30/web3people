@@ -3,6 +3,7 @@ import { getPayload } from '@/lib/getPayload'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { PersonCard } from '@/components/PersonCard'
+import { findPublishedPeople } from '@/lib/publicContent'
 import type { Person } from '@/payload-types'
 
 export const revalidate = 60
@@ -15,10 +16,7 @@ export const metadata: Metadata = {
 export default async function PeoplePage() {
   const payload = await getPayload()
 
-  const { docs: people } = await payload.find({
-    collection: 'people',
-    where: { status: { equals: 'published' } },
-    sort: '-createdAt',
+  const { docs: people } = await findPublishedPeople(payload, {
     limit: 48,
     depth: 1,
   })

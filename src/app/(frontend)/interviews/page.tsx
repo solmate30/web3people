@@ -3,6 +3,7 @@ import { getPayload } from '@/lib/getPayload'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { InterviewCard } from '@/components/InterviewCard'
+import { findPublishedInterviews } from '@/lib/publicContent'
 import type { Interview } from '@/payload-types'
 
 export const revalidate = 60
@@ -15,10 +16,7 @@ export const metadata: Metadata = {
 export default async function InterviewsPage() {
   const payload = await getPayload()
 
-  const { docs: interviews } = await payload.find({
-    collection: 'interviews',
-    where: { status: { equals: 'published' } },
-    sort: '-publishedAt',
+  const { docs: interviews } = await findPublishedInterviews(payload, {
     limit: 24,
     depth: 2,
   })

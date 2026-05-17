@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer'
 import { InterviewCard } from '@/components/InterviewCard'
 import { PersonCard } from '@/components/PersonCard'
 import { cldUrl, transforms } from '@/lib/cloudinary'
+import { findPublishedInterviews, findPublishedPeople } from '@/lib/publicContent'
 import type { Interview, Media, Person } from '@/payload-types'
 
 export const revalidate = 60
@@ -14,17 +15,11 @@ export default async function HomePage() {
   const payload = await getPayload()
 
   const [interviewsRes, peopleRes] = await Promise.all([
-    payload.find({
-      collection: 'interviews',
-      where: { status: { equals: 'published' } },
-      sort: '-publishedAt',
+    findPublishedInterviews(payload, {
       limit: 9,
       depth: 2,
     }),
-    payload.find({
-      collection: 'people',
-      where: { status: { equals: 'published' } },
-      sort: '-createdAt',
+    findPublishedPeople(payload, {
       limit: 6,
       depth: 1,
     }),
