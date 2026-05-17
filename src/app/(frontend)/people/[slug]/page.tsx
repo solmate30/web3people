@@ -89,6 +89,7 @@ export default async function PersonProfilePage({
                     fill
                     priority
                     className="object-cover"
+                    sizes="(max-width: 768px) 10rem, 14rem"
                   />
                 </div>
               )}

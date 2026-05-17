@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createClient } from '@libsql/client'
 import { drizzle } from 'drizzle-orm/libsql'
+import { authSchema } from './auth-schema'
 import { env } from './env'
 
 const turso = createClient({
@@ -9,7 +10,7 @@ const turso = createClient({
   authToken: env.databaseAuthToken,
 })
 
-const db = drizzle(turso)
+const db = drizzle(turso, { schema: authSchema })
 
 const googleProvider =
   env.googleClientId && env.googleClientSecret
@@ -27,6 +28,7 @@ export const auth = betterAuth({
   basePath: '/auth',
   database: drizzleAdapter(db, {
     provider: 'sqlite',
+    schema: authSchema,
   }),
   emailAndPassword: {
     enabled: true,

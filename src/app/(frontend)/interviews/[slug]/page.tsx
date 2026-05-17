@@ -224,6 +224,7 @@ export default async function InterviewDetailPage({
                             alt={person.name}
                             fill
                             className="object-cover"
+                            sizes="(max-width: 1024px) 100vw, 320px"
                           />
                         </div>
                       </Link>
