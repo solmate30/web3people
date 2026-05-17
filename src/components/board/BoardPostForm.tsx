@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { useSession } from '@/lib/auth-client'
 
 type BoardPostFormProps = {
@@ -51,10 +52,13 @@ export function BoardPostForm({
         throw new Error(data.message ?? '게시글을 저장하지 못했습니다.')
       }
 
+      toast.success('게시글이 등록되었습니다.')
       router.push(`/board/${data.post.id}`)
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : '게시글을 저장하지 못했습니다.')
+      const message = err instanceof Error ? err.message : '게시글을 저장하지 못했습니다.'
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }

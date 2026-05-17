@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { useSession } from '@/lib/auth-client'
 
 type BoardPost = {
@@ -71,8 +72,11 @@ export function BoardPostDetail({ postId }: { postId: number }) {
 
       setPost(data.post)
       setIsEditing(false)
+      toast.success('게시글이 수정되었습니다.')
     } catch (err) {
-      setError(err instanceof Error ? err.message : '게시글을 수정하지 못했습니다.')
+      const message = err instanceof Error ? err.message : '게시글을 수정하지 못했습니다.'
+      setError(message)
+      toast.error(message)
     }
   }
 
@@ -93,9 +97,12 @@ export function BoardPostDetail({ postId }: { postId: number }) {
         throw new Error(data.message ?? '게시글을 삭제하지 못했습니다.')
       }
 
+      toast.success('게시글이 삭제되었습니다.')
       window.location.href = '/board'
     } catch (err) {
-      setError(err instanceof Error ? err.message : '게시글을 삭제하지 못했습니다.')
+      const message = err instanceof Error ? err.message : '게시글을 삭제하지 못했습니다.'
+      setError(message)
+      toast.error(message)
     }
   }
 

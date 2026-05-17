@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { signOut, useSession } from '@/lib/auth-client'
 
 export function AuthNav() {
@@ -35,8 +36,19 @@ export function AuthNav() {
       <button
         type="button"
         onClick={async () => {
-          await signOut()
-          router.refresh()
+          try {
+            const result = await signOut()
+
+            if (result.error) {
+              toast.error(result.error.message || '로그아웃 중 문제가 발생했습니다.')
+              return
+            }
+
+            toast.success('로그아웃되었습니다.')
+            router.refresh()
+          } catch {
+            toast.error('로그아웃 중 문제가 발생했습니다.')
+          }
         }}
         className="border border-[var(--color-void-border)] px-3 py-2 font-mono text-xs uppercase tracking-widest text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-neon)] hover:text-[var(--color-neon)]"
       >

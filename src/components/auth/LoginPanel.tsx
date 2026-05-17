@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2, Mail } from 'lucide-react'
+import { toast } from 'sonner'
 import { signIn, signUp } from '@/lib/auth-client'
 
 type Mode = 'login' | 'signup'
@@ -50,10 +51,15 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
           })
 
       if (result.error) {
-        setError(result.error.message || '인증 처리 중 문제가 발생했습니다.')
+        const message = result.error.message || (mode === 'login'
+          ? '로그인에 실패했습니다.'
+          : '회원가입 중 문제가 발생했습니다.')
+        setError(message)
+        toast.error(message)
         return
       }
 
+      toast.success(mode === 'login' ? '로그인되었습니다.' : '계정이 생성되었습니다.')
       router.push(callbackURL)
       router.refresh()
     } finally {
@@ -72,7 +78,9 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
       })
 
       if (result.error) {
-        setError(result.error.message || 'Google 로그인 중 문제가 발생했습니다.')
+        const message = result.error.message || 'Google 로그인 중 문제가 발생했습니다.'
+        setError(message)
+        toast.error(message)
       }
     } finally {
       setIsLoading(false)

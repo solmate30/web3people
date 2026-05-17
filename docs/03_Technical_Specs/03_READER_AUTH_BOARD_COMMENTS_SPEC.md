@@ -1,6 +1,6 @@
 # Reader Auth, Board, Comments Spec — web3people
 > Created: 2026-05-17 15:35
-> Last Updated: 2026-05-17 21:17
+> Last Updated: 2026-05-17 22:25
 
 ## 1. 목적
 
@@ -164,7 +164,32 @@ Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better A
 | UX | 로그인 독자는 댓글을 작성하면 즉시 화면에서 확인한다 |
 | Moderation | 관리자는 부적절한 댓글/게시글을 숨김 또는 삭제할 수 있다 |
 
-## 7. 미해결 결정
+## 7. Toast 피드백 기준
+
+독자 액션은 성공/실패 여부가 즉시 체감되어야 한다. 댓글과 게시판처럼 화면 일부만 갱신되는 기능은 inline error만으로 부족하므로 `sonner` toast를 공통 피드백 레이어로 사용한다.
+
+적용 기준:
+
+- 입력 검증 오류: 필드 근처 inline error를 우선 사용한다.
+- 저장/수정/삭제/로그인/로그아웃 결과: toast를 사용한다.
+- 서버 오류: inline error와 toast를 함께 사용해 사용자가 놓치지 않게 한다.
+- 라우트 이동이 있는 성공 액션: toast를 표시한 뒤 `router.push` 또는 `router.refresh`를 실행한다.
+
+초기 메시지 범위:
+
+| 액션 | 성공 메시지 | 실패 메시지 |
+|:---|:---|:---|
+| 로그인 | 로그인되었습니다. | 로그인에 실패했습니다. |
+| 회원가입 | 계정이 생성되었습니다. | 회원가입 중 문제가 발생했습니다. |
+| 로그아웃 | 로그아웃되었습니다. | 로그아웃 중 문제가 발생했습니다. |
+| 댓글 작성 | 댓글이 등록되었습니다. | 댓글을 저장하지 못했습니다. |
+| 댓글 수정 | 댓글이 수정되었습니다. | 댓글을 수정하지 못했습니다. |
+| 댓글 삭제 | 댓글이 삭제되었습니다. | 댓글을 삭제하지 못했습니다. |
+| 게시글 작성 | 게시글이 등록되었습니다. | 게시글을 저장하지 못했습니다. |
+| 게시글 수정 | 게시글이 수정되었습니다. | 게시글을 수정하지 못했습니다. |
+| 게시글 삭제 | 게시글이 삭제되었습니다. | 게시글을 삭제하지 못했습니다. |
+
+## 8. 미해결 결정
 
 - GitHub OAuth provider 설정 방식과 기존 사용 패턴
 - 지갑 로그인 구현 방식: SIWE 직접 구성, Better Auth 플러그인, 기존 프로젝트 패턴 중 선택
@@ -172,7 +197,7 @@ Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better A
 - 댓글/게시글 신고 기능을 MVP에 포함할지
 - 게시판 카테고리 체계를 먼저 둘지, 태그 기반으로 시작할지
 
-## 8. Related Documents
+## 9. Related Documents
 
 - **Concept_Design**: [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md) - 독자 identity와 로그인 옵션의 상위 전략
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - MVP와 v2 기능 범위

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outfit, JetBrains_Mono } from 'next/font/google'
 import type { Metadata } from 'next'
+import { ToastProvider } from '@/components/ui/ToastProvider'
 import './styles.css'
 
 const outfit = Outfit({
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={`${outfit.variable} ${jetbrainsMono.variable}`}>
       <body>
         {children}
+        <ToastProvider />
       </body>
     </html>
   )

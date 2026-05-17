@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 import { useSession } from '@/lib/auth-client'
 
 type CommentItem = {
@@ -78,8 +79,11 @@ export function CommentSection({ interviewId, callbackURL }: CommentSectionProps
 
       setComments((current) => [data.comment, ...current])
       setContent('')
+      toast.success('댓글이 등록되었습니다.')
     } catch (err) {
-      setError(err instanceof Error ? err.message : '댓글을 저장하지 못했습니다.')
+      const message = err instanceof Error ? err.message : '댓글을 저장하지 못했습니다.'
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -109,8 +113,11 @@ export function CommentSection({ interviewId, callbackURL }: CommentSectionProps
       )
       setEditingId(null)
       setEditingContent('')
+      toast.success('댓글이 수정되었습니다.')
     } catch (err) {
-      setError(err instanceof Error ? err.message : '댓글을 수정하지 못했습니다.')
+      const message = err instanceof Error ? err.message : '댓글을 수정하지 못했습니다.'
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
@@ -135,8 +142,11 @@ export function CommentSection({ interviewId, callbackURL }: CommentSectionProps
       }
 
       setComments((current) => current.filter((comment) => comment.id !== commentId))
+      toast.success('댓글이 삭제되었습니다.')
     } catch (err) {
-      setError(err instanceof Error ? err.message : '댓글을 삭제하지 못했습니다.')
+      const message = err instanceof Error ? err.message : '댓글을 삭제하지 못했습니다.'
+      setError(message)
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
