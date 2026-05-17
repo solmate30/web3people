@@ -107,7 +107,7 @@ _없음_
 
 ### Todo — Phase 4A: 탐색 개선 (목표: 2026-05-07 ~ 2026-05-10)
 
-- [ ] **[V2-00]** 코드 리뷰 기반 안전장치 정리
+- [x] **[V2-00]** 코드 리뷰 기반 안전장치 정리
   - 일정: Phase 4A/4B 공통 선행 작업
   - 의존성: [Code Review Report](./02_CODE_REVIEW.md)
   - 완료 기준: 운영 env 검증, Payload access helper, 댓글 access 재설계, 공개 조회 helper 기준 확정
