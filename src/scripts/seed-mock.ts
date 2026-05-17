@@ -5,6 +5,7 @@
  *
  * 이미 목업 데이터가 있으면 건너뜁니다.
  * Cloudinary 환경변수가 설정되어 있어야 합니다.
+ * 중간 실패 후 재실행하면 slug unique 오류가 날 수 있으므로, 개발 DB를 초기화한 뒤 다시 실행합니다.
  */
 import { getPayload } from 'payload'
 import config from '../payload.config'
