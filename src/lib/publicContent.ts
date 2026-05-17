@@ -1,10 +1,15 @@
 import type { Payload } from 'payload'
-import type { Comment, Interview, Person, Tag } from '@/payload-types'
+import type { BoardPost, Comment, Interview, Person, Tag } from '@/payload-types'
 
 type FindOptions = {
   depth?: number
   limit?: number
   sort?: string
+}
+
+type BoardPostFindOptions = FindOptions & {
+  relatedInterviewId?: string | number
+  relatedPersonId?: string | number
 }
 
 type RelatedInterviewOptions = FindOptions & {
@@ -42,6 +47,14 @@ export type PersonSearchResult = {
 export type SearchContentResult = InterviewSearchResult | PersonSearchResult
 
 export type PublicComment = Pick<Comment, 'id' | 'authorName' | 'content' | 'createdAt' | 'updatedAt'>
+
+export type PublicBoardPost = Pick<
+  BoardPost,
+  'id' | 'title' | 'content' | 'authorName' | 'createdAt' | 'updatedAt'
+> & {
+  relatedInterview?: number | Interview | null
+  relatedPerson?: number | Person | null
+}
 
 export function findPublishedInterviews(payload: Payload, options: FindOptions = {}) {
   return payload.find({
@@ -288,6 +301,51 @@ export function findVisibleCommentsByInterviewId(
       updatedAt: true,
       authorEmail: true,
     },
+    overrideAccess: false,
+  })
+}
+
+export function findPublishedBoardPosts(payload: Payload, options: BoardPostFindOptions = {}) {
+  return payload.find({
+    collection: 'boardPosts',
+    where: {
+      and: [
+        { visibility: { equals: 'published' } },
+        ...(options.relatedInterviewId
+          ? [{ relatedInterview: { equals: options.relatedInterviewId } }]
+          : []),
+        ...(options.relatedPersonId
+          ? [{ relatedPerson: { equals: options.relatedPersonId } }]
+          : []),
+      ],
+    },
+    sort: options.sort ?? '-createdAt',
+    limit: options.limit ?? 24,
+    depth: options.depth ?? 1,
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      authorName: true,
+      authorEmail: true,
+      relatedInterview: true,
+      relatedPerson: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    overrideAccess: false,
+  })
+}
+
+export function findPublishedBoardPostById(
+  payload: Payload,
+  id: string | number,
+  options: FindOptions = {},
+) {
+  return payload.findByID({
+    collection: 'boardPosts',
+    id,
+    depth: options.depth ?? 1,
     overrideAccess: false,
   })
 }

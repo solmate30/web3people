@@ -1,6 +1,6 @@
 # API Specs — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 20:38
+> Last Updated: 2026-05-17 21:17
 
 ## 1. 개요
 
@@ -266,9 +266,11 @@ Payload CMS가 자동 생성하는 REST 엔드포인트:
 | POST | `/api/reader/comments` | 세션 확인 후 댓글 작성 | 구현됨 |
 | PATCH | `/api/reader/comments/[id]` | 작성자 본인 댓글 수정 | 구현됨 |
 | DELETE | `/api/reader/comments/[id]` | 작성자 본인 댓글 삭제 처리 | 구현됨 |
-| POST | `/api/board/posts` | 세션 확인 후 게시글 작성 | 계획 |
-| PATCH | `/api/board/posts/[id]` | 작성자 본인 게시글 수정 | 계획 |
-| DELETE | `/api/board/posts/[id]` | 작성자 본인 또는 관리자 삭제 | 계획 |
+| GET | `/api/reader/board/posts` | 독립/연결 게시글 목록 조회 | 구현됨 |
+| POST | `/api/reader/board/posts` | 세션 확인 후 게시글 작성 | 구현됨 |
+| GET | `/api/reader/board/posts/[id]` | 게시글 상세 조회 | 구현됨 |
+| PATCH | `/api/reader/board/posts/[id]` | 작성자 본인 게시글 수정 | 구현됨 |
+| DELETE | `/api/reader/board/posts/[id]` | 작성자 본인 게시글 삭제 처리 | 구현됨 |
 
 ---
 

@@ -33,6 +33,12 @@ export function Header() {
           >
             People
           </Link>
+          <Link
+            href="/board"
+            className="text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+          >
+            Board
+          </Link>
           <a
             href="https://www.solmatecollective.online/"
             target="_blank"

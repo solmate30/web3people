@@ -13,6 +13,7 @@ import { Tags } from './collections/Tags'
 import { People } from './collections/People'
 import { Interviews } from './collections/Interviews'
 import { Comments } from './collections/Comments'
+import { BoardPosts } from './collections/BoardPosts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -24,7 +25,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [People, Interviews, Tags, Comments, Media, Users],
+  collections: [People, Interviews, Tags, Comments, BoardPosts, Media, Users],
   editor: lexicalEditor(),
   secret: env.payloadSecret,
   typescript: {

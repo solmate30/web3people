@@ -9,6 +9,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { InterviewCard } from '@/components/InterviewCard'
 import { LexicalContent } from '@/components/LexicalContent'
+import { BoardList } from '@/components/board/BoardList'
 import {
   findPublishedInterviewsByPersonId,
   findPublishedPersonBySlug,
@@ -177,6 +178,28 @@ export default async function PersonProfilePage({
             </div>
           </section>
         )}
+
+        <section className="border-t border-[var(--color-void-border)]">
+          <div className="mx-auto max-w-[1200px] px-8 py-14 lg:px-16">
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-widest text-[var(--color-neon)]">
+                  Discussion
+                </p>
+                <h2 className="mt-3 text-2xl font-black uppercase tracking-tight text-[var(--color-text-primary)]">
+                  Person Board
+                </h2>
+              </div>
+              <Link
+                href={`/board/new?personId=${person.id}`}
+                className="inline-flex justify-center border border-[var(--color-neon)] px-4 py-3 font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-neon)] transition-colors hover:bg-[var(--color-neon)] hover:text-[var(--color-void)]"
+              >
+                Start discussion
+              </Link>
+            </div>
+            <BoardList relatedPersonId={person.id} />
+          </div>
+        </section>
       </main>
       <Footer />
     </>

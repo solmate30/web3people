@@ -71,6 +71,7 @@ export interface Config {
     interviews: Interview;
     tags: Tag;
     comments: Comment;
+    boardPosts: BoardPost;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -84,6 +85,7 @@ export interface Config {
     interviews: InterviewsSelect<false> | InterviewsSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     comments: CommentsSelect<false> | CommentsSelect<true>;
+    boardPosts: BoardPostsSelect<false> | BoardPostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -310,6 +312,25 @@ export interface Comment {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "boardPosts".
+ */
+export interface BoardPost {
+  id: number;
+  title: string;
+  content: string;
+  authorName: string;
+  /**
+   * Better Auth 유저 이메일. 공개하지 않습니다.
+   */
+  authorEmail: string;
+  relatedInterview?: (number | null) | Interview;
+  relatedPerson?: (number | null) | Person;
+  visibility: 'published' | 'hidden' | 'removed';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -374,6 +395,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'comments';
         value: number | Comment;
+      } | null)
+    | ({
+        relationTo: 'boardPosts';
+        value: number | BoardPost;
       } | null)
     | ({
         relationTo: 'media';
@@ -513,6 +538,21 @@ export interface CommentsSelect<T extends boolean = true> {
   authorEmail?: T;
   content?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "boardPosts_select".
+ */
+export interface BoardPostsSelect<T extends boolean = true> {
+  title?: T;
+  content?: T;
+  authorName?: T;
+  authorEmail?: T;
+  relatedInterview?: T;
+  relatedPerson?: T;
+  visibility?: T;
   updatedAt?: T;
   createdAt?: T;
 }

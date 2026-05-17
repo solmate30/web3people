@@ -1,6 +1,6 @@
 # Reader Auth, Board, Comments Spec — web3people
 > Created: 2026-05-17 15:35
-> Last Updated: 2026-05-17 21:07
+> Last Updated: 2026-05-17 21:17
 
 ## 1. 목적
 
@@ -78,9 +78,9 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 ```typescript
 {
   title: 'text',
-  content: 'richText',
-  authorId: 'text', // Better Auth user id
+  content: 'textarea',
   authorName: 'text',
+  authorEmail: 'email', // Better Auth email, not exposed
   relatedInterview: 'relationship: interviews',
   relatedPerson: 'relationship: people',
   visibility: 'published | hidden | removed',
@@ -107,9 +107,11 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 | POST | `/api/reader/comments` | 세션 확인 후 댓글 생성 |
 | PATCH | `/api/reader/comments/[id]` | 작성자 본인 댓글 수정 |
 | DELETE | `/api/reader/comments/[id]` | 작성자 본인 삭제 |
-| POST | `/api/board/posts` | 세션 확인 후 게시글 생성 |
-| PATCH | `/api/board/posts/[id]` | 작성자 본인 게시글 수정 |
-| DELETE | `/api/board/posts/[id]` | 작성자 본인 삭제 또는 관리자 삭제 |
+| GET | `/api/reader/board/posts` | 독립/연결 게시글 목록 조회 |
+| POST | `/api/reader/board/posts` | 세션 확인 후 게시글 생성 |
+| GET | `/api/reader/board/posts/[id]` | 게시글 상세 조회 |
+| PATCH | `/api/reader/board/posts/[id]` | 작성자 본인 게시글 수정 |
+| DELETE | `/api/reader/board/posts/[id]` | 작성자 본인 삭제 |
 
 Route Handler 내부에서 Better Auth 세션을 확인하고, 서버에서 확정한 작성자 정보만 Payload에 저장한다.
 
@@ -143,6 +145,7 @@ Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better A
    - `boardPosts` 모델
    - `/board` 목록/상세/작성 화면
    - 인터뷰/인물 연결 게시글 지원
+   - 게시글 댓글은 댓글 모델 다형화 또는 별도 `boardComments` 모델을 게시판 안정화 후 확정
 
 5. 운영 강화
    - rate limit

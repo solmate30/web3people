@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 20:38
+> Last Updated: 2026-05-17 21:17
 
 ## 1. 개요
 
@@ -164,19 +164,28 @@ Better Auth가 Turso DB에 자동으로 생성하는 테이블. 댓글/게시판
 
 ---
 
-### 2.8 `boardPosts` — 게시판 글 (계획)
+### 2.8 `boardPosts` — 게시판 글
 
-아직 구현 전이다. 독립 게시판, 인터뷰 연결 게시판, 인물 연결 게시판을 하나의 모델로 처리하는 방향을 검토한다.
+독립 게시판, 인터뷰 연결 게시판, 인물 연결 게시판을 하나의 모델로 처리한다. 독자 쓰기는 `/api/reader/board/posts` Route Handler에서 Better Auth 세션을 검증한 뒤 저장한다.
 
 | 필드 | 타입 | 필수 | 설명 |
 |:---|:---|:---:|:---|
 | title | text | Y | 게시글 제목 |
-| content | richText | Y | 게시글 본문 |
-| authorId | text | Y | Better Auth user id |
+| content | textarea | Y | 게시글 본문 |
 | authorName | text | Y | 작성자 표시명 |
+| authorEmail | email | Y | Better Auth 유저 이메일, 본인 수정/삭제 판정에 사용하며 공개하지 않음 |
 | relatedInterview | relationship | N | 연결 인터뷰 |
 | relatedPerson | relationship | N | 연결 인물 |
-| visibility | select | Y | published / hidden / removed |
+| visibility | select | Y | `published` / `hidden` / `removed` |
+
+운영 정책:
+
+- 로그인 독자만 작성한다.
+- 독립 게시글은 `relatedInterview`, `relatedPerson`이 모두 비어 있다.
+- 인터뷰 연결 게시글은 `relatedInterview`만 가진다.
+- 인물 연결 게시글은 `relatedPerson`만 가진다.
+- 작성자 본인은 Route Handler에서 본인 글을 수정하거나 삭제 처리할 수 있다.
+- 관리자는 Payload Admin에서 숨김 또는 삭제 상태로 운영 조치한다.
 
 ---
 
