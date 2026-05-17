@@ -1,6 +1,6 @@
 # DB Schema — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 16:58
+> Last Updated: 2026-05-17 18:53
 
 ## 1. 개요
 
@@ -70,7 +70,18 @@
 | slug | text | Y | URL 슬러그 (고유값) |
 | createdAt | timestamp | Y | Payload 자동 |
 
-**샘플 태그:** DeFi, NFT, Layer2, GameFi, DAO, Infrastructure, AI+Web3, Founder, Investor, Developer, Artist
+운영 규칙:
+
+- `name`: 화면 표시명. 예: Founder, Ethereum, Korean Builders
+- `slug`: URL/필터 식별자. 영문 소문자, 숫자, 하이픈만 사용. 예: founder, ethereum, korean-builders
+- 운영 분류는 [Tag Taxonomy](../04_Logic_Progress/03_TAG_TAXONOMY.md) 문서를 기준으로 관리한다.
+- 현재 배포 DB에는 별도 `category` 컬럼을 추가하지 않는다. 분류 필드가 필요해질 때는 마이그레이션 계획과 함께 도입한다.
+
+**인물 태그 분류:** role, domain, ecosystem, region, interest
+
+**인터뷰 태그 분류:** topic, industry, audience, series
+
+**샘플 태그:** Founder, Investor, Developer, DeFi, Infrastructure, Ethereum, Korea, Builders, Product Strategy
 
 ---
 
@@ -227,4 +238,5 @@ CLOUDINARY_API_SECRET=...
 - **Concept_Design**: [Product Specs](../01_Concept_Design/02_PRODUCT_SPECS.md) - 기능 명세 및 필드 요구사항
 - **Technical_Specs**: [API Specs](./02_API_SPECS.md) - 데이터 조회 API 설계
 - **Technical_Specs**: [Reader Auth, Board, Comments Spec](./03_READER_AUTH_BOARD_COMMENTS_SPEC.md) - 독자 참여 기능 데이터 모델 방향
+- **Logic_Progress**: [Tag Taxonomy](../04_Logic_Progress/03_TAG_TAXONOMY.md) - 태그 분류와 운영 규칙
 - **Logic_Progress**: [Backlog](../04_Logic_Progress/00_BACKLOG.md) - 스키마 구현 태스크

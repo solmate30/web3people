@@ -170,6 +170,9 @@ export interface Person {
     linkedin?: string | null;
     website?: string | null;
   };
+  /**
+   * 인물 태그는 직군, 분야, 생태계, 지역/언어, 관심사 분류를 우선 사용합니다.
+   */
   tags?: (number | Tag)[] | null;
   status: 'draft' | 'published';
   updatedAt: string;
@@ -201,9 +204,12 @@ export interface Media {
  */
 export interface Tag {
   id: number;
+  /**
+   * 화면에 표시되는 이름입니다. 예: Founder, Ethereum, Korean
+   */
   name: string;
   /**
-   * URL에 사용됩니다. 영문 소문자, 숫자, 하이픈만 허용합니다.
+   * URL과 검색 필터에 사용됩니다. 영문 소문자, 숫자, 하이픈만 사용합니다. 예: ethereum, web3-founder
    */
   slug: string;
   updatedAt: string;
@@ -276,6 +282,9 @@ export interface Interview {
         blockType: 'image';
       }
   )[];
+  /**
+   * 인터뷰 태그는 주제, 산업, 독자 대상, 시리즈/기획 분류를 우선 사용합니다.
+   */
   tags?: (number | Tag)[] | null;
   status: 'draft' | 'published';
   publishedAt?: string | null;

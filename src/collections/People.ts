@@ -111,6 +111,10 @@ export const People: CollectionConfig = {
       relationTo: 'tags',
       hasMany: true,
       label: '태그',
+      admin: {
+        description:
+          '인물 태그는 직군, 분야, 생태계, 지역/언어, 관심사 분류를 우선 사용합니다.',
+      },
     },
     // 발행 상태
     {

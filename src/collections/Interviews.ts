@@ -129,6 +129,8 @@ export const Interviews: CollectionConfig = {
       label: '태그',
       admin: {
         position: 'sidebar',
+        description:
+          '인터뷰 태그는 주제, 산업, 독자 대상, 시리즈/기획 분류를 우선 사용합니다.',
       },
     },
     // 발행 정보
