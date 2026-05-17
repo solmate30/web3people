@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from '@/lib/getPayload'
 import { auth } from '@/lib/auth'
+import { isTrustedRequestOrigin } from '@/lib/requestOrigin'
 import type { Comment } from '@/payload-types'
 
 const MAX_COMMENT_LENGTH = 2000
@@ -9,6 +10,10 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (!isTrustedRequestOrigin(request)) {
+    return NextResponse.json({ message: 'Forbidden origin' }, { status: 403 })
+  }
+
   const session = await auth.api.getSession({ headers: request.headers })
 
   if (!session?.user.email) {
@@ -58,6 +63,10 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  if (!isTrustedRequestOrigin(request)) {
+    return NextResponse.json({ message: 'Forbidden origin' }, { status: 403 })
+  }
+
   const session = await auth.api.getSession({ headers: request.headers })
 
   if (!session?.user.email) {

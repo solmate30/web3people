@@ -1,6 +1,6 @@
 # QA Checklist — web3people MVP
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 20:38
+> Last Updated: 2026-05-17 21:07
 
 https://www.notion.so/W3P-v3-33bbe87727b981e2bb25cb3a9f1780b8
 
@@ -69,6 +69,7 @@ https://www.notion.so/W3P-v3-33bbe87727b981e2bb25cb3a9f1780b8
 | E-04 | 작성자 본인이 댓글 삭제 | 삭제 또는 숨김 처리 성공 | 구현 |
 | E-05 | 관리자/편집자가 부적절 댓글 숨김 | 프론트에서 숨김 상태 반영 | 구현 |
 | E-06 | 클라이언트가 author 정보를 조작 | 서버 세션 기준 작성자로 저장 | 구현 |
+| E-07 | 신뢰되지 않은 Origin에서 댓글 쓰기 요청 | 403으로 차단 | 구현 |
 
 ### 2.6 게시판
 

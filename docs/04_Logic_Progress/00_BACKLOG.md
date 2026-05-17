@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 20:38
+> Last Updated: 2026-05-17 21:07
 
 ## 칸반 보드
 
@@ -179,6 +179,7 @@ _없음_
   - [x] 관리자 숨김/삭제 운영 플로우 확인
   - [x] 스팸 대응 기준 정의: MVP는 2,000자 제한과 서버 검증을 적용, rate limit/신고/계정 제한은 운영 강화 단계에서 추가
   - [x] Payload REST `/api/comments` 충돌 방지를 위해 독자 API를 `/api/reader/comments`로 분리
+  - [x] 댓글 작성/수정/삭제 API Origin 검증 추가
 
 - [ ] **[V2-06]** 게시판 기능
   - 일정: Phase 4B 3순위, 댓글 MVP 이후

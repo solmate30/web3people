@@ -1,6 +1,6 @@
 # Development Principles — web3people
 > Created: 2026-05-17 16:58
-> Last Updated: 2026-05-17 20:19
+> Last Updated: 2026-05-17 21:07
 
 ## 1. Purpose
 
@@ -138,10 +138,11 @@ http://localhost:3000/auth/callback/google
 권장 패턴:
 
 1. Next.js Route Handler에서 Better Auth 세션을 확인한다.
-2. 서버에서 author id/name/email을 확정한다.
-3. 입력값은 Zod 등으로 검증한다.
-4. Payload Local API로 저장한다.
-5. 클라이언트가 보낸 author 정보는 신뢰하지 않는다.
+2. 쓰기 요청은 `Origin`이 `env.trustedOrigins`에 포함되는지 확인한다.
+3. 서버에서 author id/name/email을 확정한다.
+4. 입력값은 Zod 등으로 검증한다.
+5. Payload Local API로 저장한다.
+6. 클라이언트가 보낸 author 정보는 신뢰하지 않는다.
 
 ## 5. Env and Database Rules
 

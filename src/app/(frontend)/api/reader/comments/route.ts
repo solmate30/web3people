@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getPayload } from '@/lib/getPayload'
 import { auth } from '@/lib/auth'
 import { findVisibleCommentsByInterviewId } from '@/lib/publicContent'
+import { isTrustedRequestOrigin } from '@/lib/requestOrigin'
 import type { Comment } from '@/payload-types'
 
 const MAX_COMMENT_LENGTH = 2000
@@ -33,6 +34,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (!isTrustedRequestOrigin(request)) {
+    return NextResponse.json({ message: 'Forbidden origin' }, { status: 403 })
+  }
+
   const session = await auth.api.getSession({ headers: request.headers })
 
   if (!session?.user.id || !session.user.email) {

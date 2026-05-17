@@ -1,6 +1,6 @@
 # Reader Auth, Board, Comments Spec — web3people
 > Created: 2026-05-17 15:35
-> Last Updated: 2026-05-17 20:38
+> Last Updated: 2026-05-17 21:07
 
 ## 1. 목적
 
@@ -97,6 +97,7 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 - 클라이언트가 보낸 `authorName`, `authorEmail`, `authorId`를 그대로 신뢰
 - Payload `users`와 Better Auth 독자 계정을 같은 로그인으로 취급
 - 댓글 자유 작성을 이유로 rate limit 없이 쓰기 API 공개
+- 쓰기 API에서 `Origin` 검증 없이 쿠키 기반 세션 요청을 처리
 
 ### 4.2 권장 Route Handler
 
@@ -115,6 +116,8 @@ Route Handler 내부에서 Better Auth 세션을 확인하고, 서버에서 확�
 Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better Auth reader라는 점을 혼동하지 않는다. 독자 쓰기 API는 별도 서버 Route Handler에서 검증하고, 필요한 경우 의도적으로 admin-level Local API를 사용하되 입력값을 서버에서 제한한다.
 
 `/api/comments`는 Payload 컬렉션 REST endpoint와 경로가 겹친다. Payload Admin의 댓글 운영 화면을 유지하기 위해 독자용 API는 `/api/reader/comments` namespace를 사용한다.
+
+댓글 생성, 수정, 삭제 요청은 `Origin` 헤더가 `BETTER_AUTH_URL` 또는 `BETTER_AUTH_TRUSTED_ORIGINS` 기준의 `env.trustedOrigins`에 포함될 때만 처리한다. 공개 댓글 조회 `GET`은 읽기 API이므로 Origin 검증 대상에서 제외한다.
 
 ## 5. 구현 순서
 
