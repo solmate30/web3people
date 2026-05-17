@@ -1,6 +1,6 @@
 # Development Principles — web3people
 > Created: 2026-05-17 16:58
-> Last Updated: 2026-05-17 19:58
+> Last Updated: 2026-05-17 20:19
 
 ## 1. Purpose
 
@@ -103,6 +103,7 @@ await req.payload.create({
 
 - `src/lib/auth.ts`: server auth instance
 - `src/lib/auth-client.ts`: client helper
+- `src/lib/currentReader.ts`: Server Component/Route Handler용 reader session helper
 - `src/app/auth/[...all]/route.ts`: route handler
 - Better Auth `basePath`는 `/auth`로 고정한다.
 - Google/Kakao 등 OAuth redirect URI는 `/auth/callback/{provider}` 형식을 사용한다.

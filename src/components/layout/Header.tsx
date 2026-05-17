@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { AuthNav } from '@/components/auth/AuthNav'
 
 export function Header() {
   return (
@@ -13,7 +14,7 @@ export function Header() {
         </Link>
 
         {/* 네비게이션 */}
-        <nav className="flex items-center gap-8">
+        <nav className="flex items-center gap-4 sm:gap-6 lg:gap-8">
           <Link
             href="/search"
             className="text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
@@ -36,10 +37,11 @@ export function Header() {
             href="https://www.solmatecollective.online/"
             target="_blank"
             rel="noreferrer"
-            className="text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)]"
+            className="hidden text-sm font-medium uppercase tracking-wider text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text-primary)] sm:inline"
           >
             Solmate
           </a>
+          <AuthNav />
         </nav>
       </div>
     </header>

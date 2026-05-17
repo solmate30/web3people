@@ -1,6 +1,6 @@
 # Reader Auth, Board, Comments Spec — web3people
 > Created: 2026-05-17 15:35
-> Last Updated: 2026-05-17 15:35
+> Last Updated: 2026-05-17 20:19
 
 ## 1. 목적
 
@@ -23,11 +23,11 @@ MVP 고도화 범위에는 다음 로그인 방식을 모두 포함한다.
 | 방식 | 목적 | 비고 |
 |:---|:---|:---|
 | Email/password | 기본 회원가입/로그인 | Better Auth emailAndPassword 사용 |
-| Google | 일반 독자 진입 장벽 완화 | 실제 구현 전 기존 프로젝트 패턴 확인 필요 |
-| GitHub | 개발자/web3 빌더 독자 친화성 | 실제 구현 전 기존 프로젝트 패턴 확인 필요 |
+| Google | 일반 독자 진입 장벽 완화 | `/auth/callback/google` 기준으로 연결 완료 |
+| GitHub | 개발자/web3 빌더 독자 친화성 | env 준비 후 `/auth/callback/github` 기준으로 추가 |
 | Blockchain wallet | web3 identity 경험 | SIWE 또는 기존 사용 패턴 확인 필요 |
 
-소셜 로그인과 지갑 로그인은 사용자가 이미 사용해오던 방식이 있으므로, 실제 코드 작업 직전에 provider 설정, 콜백 URL, 계정 연결 방식, 환경변수 이름을 확인한다.
+소셜 로그인과 지갑 로그인은 사용자가 이미 사용해오던 방식이 있으므로, 실제 코드 작업 직전에 provider 설정, 콜백 URL, 계정 연결 방식, 환경변수 이름을 확인한다. Google은 기존 프로젝트의 `/auth/callback/google` 패턴을 유지하도록 적용했다.
 
 ### 2.2 계정 분리
 
@@ -120,7 +120,8 @@ Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better A
 
 2. 독자 인증 기반
    - Better Auth email/password 확인
-   - Google/GitHub provider 설정 방식 사용자 확인
+   - Google provider 설정 방식 사용자 확인 및 적용
+   - GitHub provider 설정 방식 사용자 확인
    - 지갑 로그인 방식 사용자 확인
    - 로그인/로그아웃 UI와 세션 표시
 
@@ -154,9 +155,9 @@ Payload Local API 사용 시 `req.user`가 Payload admin user가 아닌 Better A
 
 ## 7. 미해결 결정
 
-- Google/GitHub OAuth provider 설정 방식과 기존 사용 패턴
+- GitHub OAuth provider 설정 방식과 기존 사용 패턴
 - 지갑 로그인 구현 방식: SIWE 직접 구성, Better Auth 플러그인, 기존 프로젝트 패턴 중 선택
-- Reader profile 컬렉션을 즉시 만들지, 댓글/게시판 구현 이후 분리할지
+- Reader profile 컬렉션은 댓글 MVP 이후 표시명/활동 정보 요구가 확정되면 분리한다
 - 댓글/게시글 신고 기능을 MVP에 포함할지
 - 게시판 카테고리 체계를 먼저 둘지, 태그 기반으로 시작할지
 
