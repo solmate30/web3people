@@ -1,6 +1,6 @@
 # Development Principles — web3people
 > Created: 2026-05-17 16:58
-> Last Updated: 2026-05-17 16:58
+> Last Updated: 2026-05-17 19:58
 
 ## 1. Purpose
 
@@ -26,7 +26,7 @@ src/
   app/
     (frontend)/    # 공개 콘텐츠 서비스
     (payload)/     # Payload admin/API
-    api/auth/      # Better Auth route handler
+    auth/          # Better Auth route handler (/auth/*)
   access/          # Payload admin RBAC helpers
   collections/     # Payload collection configs
   components/      # React UI components
@@ -103,7 +103,9 @@ await req.payload.create({
 
 - `src/lib/auth.ts`: server auth instance
 - `src/lib/auth-client.ts`: client helper
-- `src/app/api/auth/[...all]/route.ts`: route handler
+- `src/app/auth/[...all]/route.ts`: route handler
+- Better Auth `basePath`는 `/auth`로 고정한다.
+- Google/Kakao 등 OAuth redirect URI는 `/auth/callback/{provider}` 형식을 사용한다.
 - Turso 연결은 Drizzle adapter를 사용한다.
 
 필수 운영 env:
@@ -113,7 +115,18 @@ BETTER_AUTH_SECRET=...
 BETTER_AUTH_URL=https://www.web3people.online
 NEXT_PUBLIC_APP_URL=https://www.web3people.online
 BETTER_AUTH_TRUSTED_ORIGINS=https://preview.example.com,https://staging.example.com
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
 ```
+
+OAuth 콘솔 등록 기준:
+
+```text
+https://www.web3people.online/auth/callback/google
+http://localhost:3000/auth/callback/google
+```
+
+소셜 로그인은 Google을 먼저 연결하고, GitHub는 별도 client id/secret 준비 후 같은 `/auth/callback/github` 기준으로 추가한다.
 
 소셜 로그인과 지갑 로그인 구현 전에는 기존 프로젝트에서 사용해온 provider 설정, callback URL, env 이름, 계정 연결 방식을 사용자에게 확인한다.
 

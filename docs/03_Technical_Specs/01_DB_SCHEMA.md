@@ -224,6 +224,9 @@ BETTER_AUTH_SECRET=...                # 인증 서명 키 (운영 필수)
 BETTER_AUTH_URL=http://localhost:3000 # 서버 auth base URL. 배포: 프로덕션 도메인
 NEXT_PUBLIC_APP_URL=http://localhost:3000  # 클라이언트 auth base URL. 배포: 프로덕션 도메인
 BETTER_AUTH_TRUSTED_ORIGINS=https://preview.example.com,https://staging.example.com
+GOOGLE_CLIENT_ID=...                  # Google OAuth client id
+GOOGLE_CLIENT_SECRET=...              # Google OAuth client secret
+# OAuth redirect URI: {BETTER_AUTH_URL}/auth/callback/{provider}
 
 # Cloudinary 이미지 스토리지
 CLOUDINARY_CLOUD_NAME=...

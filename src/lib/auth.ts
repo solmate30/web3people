@@ -11,9 +11,20 @@ const turso = createClient({
 
 const db = drizzle(turso)
 
+const googleProvider =
+  env.googleClientId && env.googleClientSecret
+    ? {
+        google: {
+          clientId: env.googleClientId,
+          clientSecret: env.googleClientSecret,
+        },
+      }
+    : undefined
+
 export const auth = betterAuth({
   secret: env.betterAuthSecret,
   baseURL: env.appUrl,
+  basePath: '/auth',
   database: drizzleAdapter(db, {
     provider: 'sqlite',
   }),
@@ -25,6 +36,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24,      // refresh every 24h
   },
+  ...(googleProvider ? { socialProviders: googleProvider } : {}),
   trustedOrigins: [
     ...env.trustedOrigins,
   ],

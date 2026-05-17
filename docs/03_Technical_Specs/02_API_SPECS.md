@@ -260,7 +260,7 @@ Payload CMS가 자동 생성하는 REST 엔드포인트:
 
 | Method | 경로 | 역할 | 상태 |
 |:---|:---|:---|:---:|
-| GET/POST | `/api/auth/[...all]` | Better Auth 핸들러 | 구현됨 |
+| GET/POST | `/auth/[...all]` | Better Auth 핸들러. OAuth callback은 `/auth/callback/{provider}` 사용 | 구현됨 |
 | POST | `/api/comments` | 세션 확인 후 댓글 작성 | 계획 |
 | PATCH | `/api/comments/[id]` | 작성자 본인 댓글 수정 | 계획 |
 | DELETE | `/api/comments/[id]` | 작성자 본인 또는 관리자 삭제 | 계획 |

@@ -65,6 +65,8 @@ export const env = {
   appUrl,
   trustedOrigins: uniqueValues([appUrl, ...listEnv('BETTER_AUTH_TRUSTED_ORIGINS')]),
   betterAuthSecret: requiredInProductionWithFallback('BETTER_AUTH_SECRET', 'dev-better-auth-secret'),
+  googleClientId: requiredInProduction('GOOGLE_CLIENT_ID'),
+  googleClientSecret: requiredInProduction('GOOGLE_CLIENT_SECRET'),
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,

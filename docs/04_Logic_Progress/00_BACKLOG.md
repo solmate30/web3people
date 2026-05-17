@@ -1,6 +1,6 @@
 # Backlog — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 19:08
+> Last Updated: 2026-05-17 19:58
 
 ## 칸반 보드
 
@@ -23,7 +23,9 @@ _없음_
 - [x] **[P1-01c]** Better-Auth 설치 및 초기화
   - `src/lib/auth.ts` (서버 인스턴스, Turso 연결)
   - `src/lib/auth-client.ts` (클라이언트 헬퍼, signIn/signOut/useSession)
-  - `src/app/api/auth/[...all]/route.ts` (Route Handler)
+  - `src/app/auth/[...all]/route.ts` (Route Handler, `basePath: "/auth"`)
+  - OAuth 콘솔 redirect URI 기준: `/auth/callback/{provider}`
+  - Google OAuth provider 연결 완료 (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`)
 - [x] **[P1-01d]** Tailwind CSS v4 + shadcn/ui 셋업
   - `tailwindcss`, `@tailwindcss/postcss`, `postcss` 설치
   - `components.json` 수동 설정 (Tailwind v4 CSS 파일 경로 지정)
