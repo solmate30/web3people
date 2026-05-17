@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { cache } from 'react'
@@ -125,12 +126,13 @@ export default async function PersonProfilePage({
                 {tags.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {tags.map((tag) => (
-                      <span
+                      <Link
                         key={(tag as Tag).id}
-                        className="border border-[var(--color-void-border)] px-3 py-1 font-mono text-xs text-[var(--color-text-muted)]"
+                        href={`/tags/${(tag as Tag).slug}`}
+                        className="border border-[var(--color-void-border)] px-3 py-1 font-mono text-xs text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-neon)] hover:text-[var(--color-neon)]"
                       >
                         {(tag as Tag).name}
-                      </span>
+                      </Link>
                     ))}
                   </div>
                 )}

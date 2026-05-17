@@ -1,6 +1,6 @@
 # API Specs — web3people
 > Created: 2026-03-29 00:00
-> Last Updated: 2026-05-17 17:16
+> Last Updated: 2026-05-17 19:08
 
 ## 1. 개요
 
@@ -153,6 +153,58 @@ await payload.find({
 - `latest`: 발행일 또는 생성일 최신순
 
 결과 UI는 인터뷰와 인물을 구분해 렌더링한다. 검색어가 없거나 결과가 없을 때는 추천 태그를 노출한다.
+
+---
+
+### 2.7 태그 필터 (`/tags/[slug]`)
+
+태그 필터는 독립 공개 페이지로 제공한다. `Tags.slug`를 URL 식별자로 사용하고, 연결된 공개 인터뷰와 공개 인물을 같은 화면에서 구분해 렌더링한다.
+
+입력:
+
+| Param | 값 | 설명 |
+|:---|:---|:---|
+| `slug` | string | `Tags.slug` 값 |
+
+조회:
+
+```typescript
+await payload.find({
+  collection: 'tags',
+  where: { slug: { equals: slug } },
+  limit: 1,
+  depth: 0,
+  overrideAccess: false,
+})
+
+await payload.find({
+  collection: 'interviews',
+  where: {
+    and: [
+      { tags: { in: [tag.id] } },
+      { status: { equals: 'published' } },
+    ],
+  },
+  sort: '-publishedAt',
+  depth: 2,
+  overrideAccess: false,
+})
+
+await payload.find({
+  collection: 'people',
+  where: {
+    and: [
+      { tags: { in: [tag.id] } },
+      { status: { equals: 'published' } },
+    ],
+  },
+  sort: '-createdAt',
+  depth: 1,
+  overrideAccess: false,
+})
+```
+
+결과 UI는 태그명, 연결 콘텐츠 총합, 인터뷰 수, 인물 수를 표시한다. 검색 페이지의 추천 태그와 인물/인터뷰 상세의 태그는 `/tags/[slug]`로 연결한다.
 
 ---
 

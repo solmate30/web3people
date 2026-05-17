@@ -149,7 +149,11 @@ function SearchResults({
   )
 }
 
-function EmptyStart({ tags }: { tags: Array<{ id: number | string; name: string }> }) {
+function EmptyStart({
+  tags,
+}: {
+  tags: Array<{ id: number | string; name: string; slug: string }>
+}) {
   return (
     <div className="mt-16">
       <p className="max-w-2xl text-lg leading-relaxed text-[var(--color-text-secondary)]">
@@ -165,7 +169,7 @@ function NoResults({
   tags,
 }: {
   query: string
-  tags: Array<{ id: number | string; name: string }>
+  tags: Array<{ id: number | string; name: string; slug: string }>
 }) {
   return (
     <div className="mt-16 border border-[var(--color-void-border)] p-8">
@@ -180,7 +184,11 @@ function NoResults({
   )
 }
 
-function RecommendedTags({ tags }: { tags: Array<{ id: number | string; name: string }> }) {
+function RecommendedTags({
+  tags,
+}: {
+  tags: Array<{ id: number | string; name: string; slug: string }>
+}) {
   if (tags.length === 0) return null
 
   return (
@@ -192,7 +200,7 @@ function RecommendedTags({ tags }: { tags: Array<{ id: number | string; name: st
         {tags.map((tag) => (
           <Link
             key={tag.id}
-            href={`/search?q=${encodeURIComponent(tag.name)}`}
+            href={`/tags/${tag.slug}`}
             className="border border-[var(--color-void-border)] px-3 py-1.5 font-mono text-xs text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-neon)] hover:text-[var(--color-neon)]"
           >
             {tag.name}

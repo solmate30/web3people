@@ -109,9 +109,12 @@ export default async function InterviewDetailPage({
             <div>
               {/* 태그 */}
               {tags.length > 0 && (
-                <span className="mt-8 block font-mono text-xs uppercase tracking-widest text-[var(--color-neon)]">
+                <Link
+                  href={`/tags/${tags[0].slug}`}
+                  className="mt-8 block font-mono text-xs uppercase tracking-widest text-[var(--color-neon)] transition-colors hover:text-[var(--color-text-primary)]"
+                >
                   {tags[0].name}
-                </span>
+                </Link>
               )}
 
               {/* 제목 */}
@@ -261,12 +264,13 @@ export default async function InterviewDetailPage({
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {tags.map((tag) => (
-                        <span
+                        <Link
                           key={(tag as Tag).id}
-                          className="border border-[var(--color-void-border)] px-3 py-1 font-mono text-xs text-[var(--color-text-muted)]"
+                          href={`/tags/${(tag as Tag).slug}`}
+                          className="border border-[var(--color-void-border)] px-3 py-1 font-mono text-xs text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-neon)] hover:text-[var(--color-neon)]"
                         >
                           {(tag as Tag).name}
-                        </span>
+                        </Link>
                       ))}
                     </div>
                   </div>

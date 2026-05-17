@@ -62,6 +62,48 @@ export function findPublicTags(payload: Payload, options: FindOptions = {}) {
   })
 }
 
+export function findPublicTagSlugs(payload: Payload) {
+  return collectPublicTagSlugs(payload)
+}
+
+async function collectPublicTagSlugs(payload: Payload) {
+  const slugs: Array<{ slug: string }> = []
+  let page = 1
+  let totalPages = 1
+
+  do {
+    const result = await payload.find({
+      collection: 'tags',
+      select: { slug: true },
+      sort: 'slug',
+      limit: 100,
+      page,
+      depth: 0,
+      overrideAccess: false,
+    })
+
+    slugs.push(...result.docs.map((doc) => ({ slug: doc.slug })))
+    totalPages = result.totalPages
+    page += 1
+  } while (page <= totalPages)
+
+  return { docs: slugs }
+}
+
+export function findPublicTagBySlug(
+  payload: Payload,
+  slug: string,
+  options: FindBySlugOptions = {},
+) {
+  return payload.find({
+    collection: 'tags',
+    where: { slug: { equals: slug } },
+    depth: options.depth ?? 0,
+    limit: 1,
+    overrideAccess: false,
+  })
+}
+
 export function findPublishedInterviewSlugs(payload: Payload) {
   return collectPublishedInterviewSlugs(payload)
 }
@@ -195,6 +237,46 @@ export function findPublishedInterviewsByPersonId(
     },
     sort: options.sort ?? '-publishedAt',
     limit: options.limit ?? 24,
+    depth: options.depth ?? 1,
+    overrideAccess: false,
+  })
+}
+
+export function findPublishedInterviewsByTagId(
+  payload: Payload,
+  tagId: string | number,
+  options: FindOptions = {},
+) {
+  return payload.find({
+    collection: 'interviews',
+    where: {
+      and: [
+        { tags: { in: [tagId] } },
+        { status: { equals: 'published' } },
+      ],
+    },
+    sort: options.sort ?? '-publishedAt',
+    limit: options.limit ?? 24,
+    depth: options.depth ?? 1,
+    overrideAccess: false,
+  })
+}
+
+export function findPublishedPeopleByTagId(
+  payload: Payload,
+  tagId: string | number,
+  options: FindOptions = {},
+) {
+  return payload.find({
+    collection: 'people',
+    where: {
+      and: [
+        { tags: { in: [tagId] } },
+        { status: { equals: 'published' } },
+      ],
+    },
+    sort: options.sort ?? '-createdAt',
+    limit: options.limit ?? 48,
     depth: options.depth ?? 1,
     overrideAccess: false,
   })
