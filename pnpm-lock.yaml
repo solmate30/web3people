@@ -105,6 +105,9 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.8.1
+      solmate-skills:
+        specifier: ^2.0.14
+        version: 2.0.14
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
@@ -4228,6 +4231,11 @@ packages:
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
+
+  solmate-skills@2.0.14:
+    resolution: {integrity: sha512-Gpp5uq9vmPPj0FDOHk0ROxHajcBZCE1LSDVTi2J1wtoJRWfnu+mcmv5iIB0ptaBL1TV9e/krG9uWdVr9gHR+xQ==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
 
   sonic-boom@4.2.1:
     resolution: {integrity: sha512-w6AxtubXa2wTXAUsZMMWERrsIRAdrK0Sc+FUytWvYAhBJLyuI4llrMIC1DtlNSdI99EI86KZum2MMq3EAZlF9Q==}
@@ -9116,6 +9124,8 @@ snapshots:
   simple-wcswidth@1.1.2: {}
 
   sisteransi@1.0.5: {}
+
+  solmate-skills@2.0.14: {}
 
   sonic-boom@4.2.1:
     dependencies:
