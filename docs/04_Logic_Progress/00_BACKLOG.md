@@ -207,9 +207,21 @@ _없음_
 
 ### Todo — Phase 4C: 성장/운영 보강 (목표: 2026-05-18 ~)
 
-- [ ] **[V2-07]** 뉴스레터 구독 (이메일 수집 + 발송)
-- [ ] **[V2-08]** Payload webhook → revalidatePath (즉시 캐시 갱신)
-- [ ] **[V2-09]** 소셜 공유 버튼 최적화
+- [ ] **[V2-07]** 회원 관리 정책 정리
+  - 일정: Phase 4C 1순위
+  - 의존성: V2-04 독자 인증, V2-05 댓글, V2-06 게시판
+  - 참고 문서: [Member Management TODO](./04_MEMBER_MANAGEMENT_TODO.md)
+  - 완료 기준: 회원 역할, reader profile 도입 여부, 계정 병합, 차단/탈퇴/작성 이력 보존 정책 확정
+  - [ ] 회원 역할 정의: reader / editor / admin — ref: [Member Management TODO §2](./04_MEMBER_MANAGEMENT_TODO.md#2-회원-역할-정리), [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md)
+  - [ ] Better Auth user와 Payload 데이터 연결 방식 결정 — ref: [Member Management TODO §3](./04_MEMBER_MANAGEMENT_TODO.md#3-better-auth-사용자와-payload-데이터-연결), [Reader Auth Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md)
+  - [ ] Google/GitHub 소셜 로그인 프로필 관리 기준 정리 — ref: [Member Management TODO §4](./04_MEMBER_MANAGEMENT_TODO.md#4-소셜-로그인-프로필-관리), [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md)
+  - [ ] 지갑 로그인과 계정 병합 정책 정리 — ref: [Member Management TODO §5](./04_MEMBER_MANAGEMENT_TODO.md#5-지갑-로그인과-계정-병합), [Identity & Auth Strategy](../01_Concept_Design/04_IDENTITY_AUTH_STRATEGY.md)
+  - [ ] 차단/탈퇴/삭제 정책 정리 — ref: [Member Management TODO §6](./04_MEMBER_MANAGEMENT_TODO.md#6-차단-탈퇴-삭제-정책), [Reader Auth Spec](../03_Technical_Specs/03_READER_AUTH_BOARD_COMMENTS_SPEC.md)
+  - [ ] 댓글·게시글 작성자 이력 보존 정책 정리 — ref: [Member Management TODO §7](./04_MEMBER_MANAGEMENT_TODO.md#7-댓글과-게시글-작성-이력-보존), [DB Schema](../03_Technical_Specs/01_DB_SCHEMA.md)
+  - [ ] 관리자 화면 회원 관리 요구사항 정리 — ref: [Member Management TODO §8](./04_MEMBER_MANAGEMENT_TODO.md#8-관리자-화면-운영), [QA Checklist](../05_QA_Validation/01_QA_CHECKLIST.md)
+- [ ] **[V2-08]** 뉴스레터 구독 (이메일 수집 + 발송)
+- [ ] **[V2-09]** Payload webhook → revalidatePath (즉시 캐시 갱신)
+- [ ] **[V2-10]** 소셜 공유 버튼 최적화
 
 ---
 
