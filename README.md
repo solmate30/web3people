@@ -38,7 +38,20 @@ pnpm install
 ```
 
 ### 3. 환경 변수 설정
-`test.env` 또는 `.env.example` 파일을 참고하여 로컬 실행을 위한 `.env.development` (혹은 `.env`)를 생성합니다.
+`.env.example`을 참고하여 로컬용 `.env`를 생성합니다.
+
+독자 Google 로그인에 필요한 최소 키:
+- `BETTER_AUTH_URL`, `NEXT_PUBLIC_APP_URL` (로컬: `http://localhost:3000`)
+- `BETTER_AUTH_SECRET`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+
+프로덕션에서는 Google OAuth redirect URI가 다음이어야 합니다.
+- `https://www.web3people.online/auth/callback/google`
+
+앱은 요청 Host/`X-Forwarded-Host` 기준으로 callback URL을 맞추고, 알 수 없는 호스트는
+`https://www.web3people.online`으로 fallback합니다. 가능하면 Vercel의
+`BETTER_AUTH_URL` / `NEXT_PUBLIC_APP_URL`도 같은 canonical 도메인으로 맞추세요.
+
 > **보안 주의(Security)**: 시크릿과 인증 정보가 포함된 실제 배포용 `.env.production` 파일은 어떠한 경우에도 Git에 커밋하지 않습니다.
 
 ### 4. 개발 서버 실행

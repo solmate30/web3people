@@ -8,7 +8,15 @@ import { signIn, signUp } from '@/lib/auth-client'
 
 type Mode = 'login' | 'signup'
 
-export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
+type LoginPanelProps = {
+  callbackURL?: string
+  googleEnabled?: boolean
+}
+
+export function LoginPanel({
+  callbackURL = '/',
+  googleEnabled = false,
+}: LoginPanelProps) {
   const router = useRouter()
   const [mode, setMode] = useState<Mode>('login')
   const [name, setName] = useState('')
@@ -68,6 +76,13 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
   }
 
   async function continueWithGoogle() {
+    if (!googleEnabled) {
+      const message = 'Google 로그인이 아직 설정되지 않았습니다.'
+      setError(message)
+      toast.error(message)
+      return
+    }
+
     setIsLoading(true)
     setError(null)
 
@@ -81,7 +96,22 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
         const message = result.error.message || 'Google 로그인 중 문제가 발생했습니다.'
         setError(message)
         toast.error(message)
+        return
       }
+
+      // Better Auth usually redirects; fall back to returned URL when present.
+      const redirectUrl =
+        result.data && typeof result.data === 'object' && 'url' in result.data
+          ? String((result.data as { url?: string }).url ?? '')
+          : ''
+
+      if (redirectUrl) {
+        window.location.assign(redirectUrl)
+      }
+    } catch {
+      const message = 'Google 로그인 중 문제가 발생했습니다.'
+      setError(message)
+      toast.error(message)
     } finally {
       setIsLoading(false)
     }
@@ -213,9 +243,14 @@ export function LoginPanel({ callbackURL = '/' }: { callbackURL?: string }) {
           </div>
 
           <div className="space-y-3">
-            <button type="button" onClick={continueWithGoogle} disabled={isLoading} className={secondaryButtonClass}>
+            <button
+              type="button"
+              onClick={continueWithGoogle}
+              disabled={isLoading || !googleEnabled}
+              className={`${secondaryButtonClass} ${!googleEnabled ? 'cursor-not-allowed opacity-50' : ''}`}
+            >
               <span className="font-mono text-sm font-bold" aria-hidden="true">G</span>
-              Continue with Google
+              {googleEnabled ? 'Continue with Google' : 'Google 설정 필요'}
             </button>
             <button type="button" disabled className={`${secondaryButtonClass} cursor-not-allowed opacity-50`}>
               <span className="font-mono text-sm" aria-hidden="true">GH</span>

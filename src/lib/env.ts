@@ -51,10 +51,26 @@ function uniqueValues(values: string[]): string[] {
   return [...new Set(values)]
 }
 
-const appUrl = requiredAnyInProductionWithFallback(
-  ['BETTER_AUTH_URL', 'NEXT_PUBLIC_APP_URL'],
-  'http://localhost:3000',
+function normalizeAppUrl(value: string): string {
+  return value.trim().replace(/\/+$/, '')
+}
+
+const appUrl = normalizeAppUrl(
+  requiredAnyInProductionWithFallback(
+    ['BETTER_AUTH_URL', 'NEXT_PUBLIC_APP_URL'],
+    'http://localhost:3000',
+  ),
 )
+
+const googleClientId = requiredInProduction('GOOGLE_CLIENT_ID')?.trim() || undefined
+const googleClientSecret = requiredInProduction('GOOGLE_CLIENT_SECRET')?.trim() || undefined
+
+const defaultTrustedOrigins = [
+  appUrl,
+  'http://localhost:3000',
+  'https://www.web3people.online',
+  'https://web3people.online',
+]
 
 export const env = {
   isProduction,
@@ -63,10 +79,14 @@ export const env = {
   databaseUrl: requiredInProductionWithFallback('DATABASE_URL', 'file:./payload.db'),
   databaseAuthToken: requiredInProduction('DATABASE_AUTH_TOKEN'),
   appUrl,
-  trustedOrigins: uniqueValues([appUrl, ...listEnv('BETTER_AUTH_TRUSTED_ORIGINS')]),
+  trustedOrigins: uniqueValues([
+    ...defaultTrustedOrigins,
+    ...listEnv('BETTER_AUTH_TRUSTED_ORIGINS').map(normalizeAppUrl),
+  ]),
   betterAuthSecret: requiredInProductionWithFallback('BETTER_AUTH_SECRET', 'dev-better-auth-secret'),
-  googleClientId: requiredInProduction('GOOGLE_CLIENT_ID'),
-  googleClientSecret: requiredInProduction('GOOGLE_CLIENT_SECRET'),
+  googleClientId,
+  googleClientSecret,
+  isGoogleAuthEnabled: Boolean(googleClientId && googleClientSecret),
   cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,

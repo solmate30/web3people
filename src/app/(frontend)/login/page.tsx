@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { LoginPanel } from '@/components/auth/LoginPanel'
+import { env } from '@/lib/env'
 
 export const metadata: Metadata = {
   title: 'Login',
@@ -20,7 +21,10 @@ export default async function LoginPage({
     <>
       <Header />
       <main className="pt-16">
-        <LoginPanel callbackURL={safeCallbackURL} />
+        <LoginPanel
+          callbackURL={safeCallbackURL}
+          googleEnabled={env.isGoogleAuthEnabled}
+        />
       </main>
       <Footer />
     </>
