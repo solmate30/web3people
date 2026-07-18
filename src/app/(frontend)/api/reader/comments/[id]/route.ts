@@ -51,6 +51,7 @@ export async function PATCH(
     comment: {
       id: updated.id,
       authorName: updated.authorName,
+      authorImage: updated.authorImage?.trim() || null,
       content: updated.content,
       createdAt: updated.createdAt,
       updatedAt: updated.updatedAt,

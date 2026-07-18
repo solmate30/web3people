@@ -52,6 +52,14 @@ export const Comments: CollectionConfig = {
       },
     },
     {
+      name: 'authorImage',
+      type: 'text',
+      label: '작성자 프로필 이미지',
+      admin: {
+        description: 'Better-Auth 프로필 이미지 URL (선택)',
+      },
+    },
+    {
       name: 'content',
       type: 'textarea',
       required: true,

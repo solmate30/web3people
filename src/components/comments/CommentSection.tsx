@@ -4,10 +4,12 @@ import { FormEvent, useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { useSession } from '@/lib/auth-client'
+import { ReaderAvatar } from '@/components/auth/ReaderAvatar'
 
 type CommentItem = {
   id: number
   authorName: string
+  authorImage: string | null
   content: string
   createdAt: string
   updatedAt: string
@@ -152,6 +154,9 @@ export function CommentSection({ interviewId, callbackURL }: CommentSectionProps
     }
   }
 
+  const composerName = session?.user.name?.trim() || session?.user.email || 'Reader'
+  const composerImage = session?.user.image?.trim() || null
+
   return (
     <div className="border border-[var(--color-void-border)] bg-[var(--color-surface)] p-6">
       <div className="flex flex-col gap-2 border-b border-[var(--color-void-border)] pb-5 sm:flex-row sm:items-end sm:justify-between">
@@ -191,9 +196,10 @@ export function CommentSection({ interviewId, callbackURL }: CommentSectionProps
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-[var(--color-text-secondary)]">
-                {session.user.name || session.user.email} 계정으로 작성합니다.
-              </p>
+              <div className="flex min-w-0 items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+                <ReaderAvatar name={composerName} imageUrl={composerImage} size={24} />
+                <span className="truncate">{composerName} 계정으로 작성합니다.</span>
+              </div>
               <button
                 type="submit"
                 disabled={isSubmitting || !content.trim()}
@@ -235,77 +241,90 @@ export function CommentSection({ interviewId, callbackURL }: CommentSectionProps
             아직 댓글이 없습니다. 첫 댓글을 남겨 주세요.
           </p>
         ) : (
-          comments.map((comment) => (
-            <article key={comment.id} className="border border-[var(--color-void-border)] p-4">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <p className="font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-text-primary)]">
-                    {comment.authorName}
-                  </p>
-                  <time className="mt-1 block font-mono text-[11px] text-[var(--color-text-muted)]">
-                    {formatCommentDate(comment.createdAt)}
-                  </time>
-                </div>
-                {comment.canManage && (
-                  <div className="flex gap-3 font-mono text-[11px] uppercase tracking-widest">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingId(comment.id)
-                        setEditingContent(comment.content)
-                      }}
-                      className="text-[var(--color-neon)] hover:text-[var(--color-text-primary)]"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void handleDelete(comment.id)}
-                      className="text-[var(--color-text-muted)] hover:text-red-200"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </div>
+          comments.map((comment) => {
+            const displayImage =
+              comment.authorImage
+              || (comment.canManage ? composerImage : null)
 
-              {editingId === comment.id ? (
-                <div className="mt-4 space-y-3">
-                  <textarea
-                    value={editingContent}
-                    onChange={(event) => setEditingContent(event.target.value)}
-                    maxLength={MAX_COMMENT_LENGTH}
-                    rows={4}
-                    className="w-full resize-y border border-[var(--color-void-border)] bg-[var(--color-void)] px-4 py-3 text-sm leading-relaxed text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-neon)]"
-                  />
-                  <div className="flex justify-end gap-3 font-mono text-xs uppercase tracking-widest">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingId(null)
-                        setEditingContent('')
-                      }}
-                      className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      disabled={isSubmitting || !editingContent.trim()}
-                      onClick={() => void handleUpdate(comment.id)}
-                      className="text-[var(--color-neon)] hover:text-[var(--color-text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Save
-                    </button>
+            return (
+              <article key={comment.id} className="border border-[var(--color-void-border)] p-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <ReaderAvatar
+                      name={comment.authorName}
+                      imageUrl={displayImage}
+                      size={32}
+                    />
+                    <div className="min-w-0">
+                      <p className="font-mono text-xs font-bold uppercase tracking-widest text-[var(--color-text-primary)]">
+                        {comment.authorName}
+                      </p>
+                      <time className="mt-1 block font-mono text-[11px] text-[var(--color-text-muted)]">
+                        {formatCommentDate(comment.createdAt)}
+                      </time>
+                    </div>
                   </div>
+                  {comment.canManage && (
+                    <div className="flex gap-3 font-mono text-[11px] uppercase tracking-widest">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingId(comment.id)
+                          setEditingContent(comment.content)
+                        }}
+                        className="text-[var(--color-neon)] hover:text-[var(--color-text-primary)]"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void handleDelete(comment.id)}
+                        className="text-[var(--color-text-muted)] hover:text-red-200"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-text-secondary)]">
-                  {comment.content}
-                </p>
-              )}
-            </article>
-          ))
+
+                {editingId === comment.id ? (
+                  <div className="mt-4 space-y-3">
+                    <textarea
+                      value={editingContent}
+                      onChange={(event) => setEditingContent(event.target.value)}
+                      maxLength={MAX_COMMENT_LENGTH}
+                      rows={4}
+                      className="w-full resize-y border border-[var(--color-void-border)] bg-[var(--color-void)] px-4 py-3 text-sm leading-relaxed text-[var(--color-text-primary)] outline-none transition-colors focus:border-[var(--color-neon)]"
+                    />
+                    <div className="flex justify-end gap-3 font-mono text-xs uppercase tracking-widest">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingId(null)
+                          setEditingContent('')
+                        }}
+                        className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isSubmitting || !editingContent.trim()}
+                        onClick={() => void handleUpdate(comment.id)}
+                        className="text-[var(--color-neon)] hover:text-[var(--color-text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                    {comment.content}
+                  </p>
+                )}
+              </article>
+            )
+          })
         )}
       </div>
     </div>

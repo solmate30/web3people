@@ -305,6 +305,10 @@ export interface Comment {
    * Better-Auth 유저 이메일 (공개되지 않음)
    */
   authorEmail: string;
+  /**
+   * Better-Auth 프로필 이미지 URL (선택)
+   */
+  authorImage?: string | null;
   content: string;
   status: 'visible' | 'hidden' | 'removed';
   updatedAt: string;
@@ -536,6 +540,7 @@ export interface CommentsSelect<T extends boolean = true> {
   interview?: T;
   authorName?: T;
   authorEmail?: T;
+  authorImage?: T;
   content?: T;
   status?: T;
   updatedAt?: T;

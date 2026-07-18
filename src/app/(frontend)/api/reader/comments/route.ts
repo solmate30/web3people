@@ -10,6 +10,7 @@ const MAX_COMMENT_LENGTH = 2000
 type CommentResponse = {
   id: number
   authorName: string
+  authorImage: string | null
   content: string
   createdAt: string
   updatedAt: string
@@ -27,6 +28,29 @@ export async function GET(request: Request) {
   const payload = await getPayload()
   const session = await auth.api.getSession({ headers: request.headers })
   const { docs } = await findVisibleCommentsByInterviewId(payload, interviewId)
+
+  // Backfill missing profile images for the current reader's own comments.
+  const sessionImage = typeof session?.user.image === 'string' ? session.user.image.trim() : ''
+  if (session?.user.email && sessionImage) {
+    await Promise.all(
+      docs
+        .filter((comment) => {
+          const item = comment as Comment
+          return item.authorEmail === session.user.email && !item.authorImage
+        })
+        .map((comment) =>
+          payload.update({
+            collection: 'comments',
+            id: comment.id,
+            data: { authorImage: sessionImage },
+            overrideAccess: true,
+            context: { skipHooks: true },
+          }).then((updated) => {
+            Object.assign(comment, { authorImage: updated.authorImage })
+          }).catch(() => undefined),
+        ),
+    )
+  }
 
   return NextResponse.json({
     comments: docs.map((comment) => toCommentResponse(comment as Comment, session?.user.email)),
@@ -64,12 +88,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Interview not found' }, { status: 404 })
   }
 
+  const authorImage = typeof session.user.image === 'string' ? session.user.image.trim() : ''
+
   const comment = await payload.create({
     collection: 'comments',
     data: {
       interview: interviewId,
       authorName: session.user.name || session.user.email,
       authorEmail: session.user.email,
+      ...(authorImage ? { authorImage } : {}),
       content,
       status: 'visible',
     },
@@ -86,6 +113,7 @@ function toCommentResponse(comment: Comment, currentUserEmail?: string): Comment
   return {
     id: comment.id,
     authorName: comment.authorName,
+    authorImage: comment.authorImage?.trim() || null,
     content: comment.content,
     createdAt: comment.createdAt,
     updatedAt: comment.updatedAt,

@@ -1,10 +1,10 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { signOut, useSession } from '@/lib/auth-client'
+import { ReaderAvatar } from '@/components/auth/ReaderAvatar'
 
 export function AuthNav() {
   const router = useRouter()
@@ -29,27 +29,11 @@ export function AuthNav() {
 
   const label = session.user.name?.trim() || session.user.email || 'Reader'
   const imageUrl = session.user.image?.trim() || null
-  const initials = getInitials(label)
 
   return (
     <div className="flex items-center gap-3">
       <div className="flex min-w-0 items-center gap-2">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt=""
-            width={28}
-            height={28}
-            className="size-7 shrink-0 rounded-full border border-[var(--color-void-border)] object-cover"
-          />
-        ) : (
-          <span
-            aria-hidden="true"
-            className="inline-flex size-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-void-border)] bg-[var(--color-surface)] font-mono text-[10px] font-bold uppercase text-[var(--color-neon)]"
-          >
-            {initials}
-          </span>
-        )}
+        <ReaderAvatar name={label} imageUrl={imageUrl} size={28} />
         <span className="max-w-[140px] truncate font-mono text-xs uppercase tracking-widest text-[var(--color-text-primary)]">
           {label}
         </span>
@@ -77,16 +61,4 @@ export function AuthNav() {
       </button>
     </div>
   )
-}
-
-function getInitials(label: string): string {
-  const parts = label
-    .replace(/@.*/, '')
-    .split(/[\s._-]+/)
-    .map((part) => part.trim())
-    .filter(Boolean)
-
-  if (parts.length === 0) return '?'
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return `${parts[0][0] ?? ''}${parts[1][0] ?? ''}`.toUpperCase()
 }
